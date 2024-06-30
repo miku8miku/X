@@ -75,7 +75,137 @@ let LOOP_TIMES = $.getdata('xsy_looptimes') || 5 // 注册次数
     .catch((e) => $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, ''))
     .finally(() => $.done())
 // prettier-ignore
-function Invite(){return new class{constructor(){this.baseURL="https://h5xsycr3.com/webapi",this.defaultCookie=`userCode=${XSY_INVITECODE}; channel=xsy_official;`,this.headers={"Content-Type":"application/json","User-Agent":"Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1",Origin:"https://h5xsycr3.com",Host:"h5xsycr3.com",Device:"h5",Version:"1.0",Cookie:this.defaultCookie}}getDateTime(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"yyyy-MM-dd hh:mm:ss",t=new Date,o={"M+":t.getMonth()+1,"d+":t.getDate(),"h+":t.getHours(),"m+":t.getMinutes(),"s+":t.getSeconds(),"q+":Math.floor((t.getMonth()+3)/3),S:t.getMilliseconds()};for(var r in/(y+)/.test(e)&&(e=e.replace(RegExp.$1,(t.getFullYear()+"").substr(4-RegExp.$1.length))),o)new RegExp("("+r+")").test(e)&&(e=e.replace(RegExp.$1,1==RegExp.$1.length?o[r]:("00"+o[r]).substr((""+o[r]).length)));return e}async getCaptcha(){let e=this.getDateTime(),t="HlybAwPeM8WtNpenYNjEPw==";const o={url:`${this.baseURL}/system/captcha`,method:"post",headers:{...this.headers,Sign:helper.encryptMd5Data(t+e+helper.key),Time:e},body:JSON.stringify({data:t}),use_proxy:!0};try{const{data:e,status:t}=await Request(o);if("y"==t){const{token:t,code:o}=JSON.parse(helper.decryptData(e));return{token:t,code:o}}throw console.log("❌校验失败"),e}catch(e){throw e||"验证失败, 接口可能gg喽~"}}async register(e,t){const o=(e=3)=>{var t="abcdefghijklmnopqrstuvwxyz0123456789",o="yuheng";for(let r=0;r<e;r++)o+=t.charAt(Math.floor(Math.random()*t.length));return o};let r=helper.encryptData({account:o(),password:"yuhengyy6",confirm_password:"yuhengyy6",code:t,code_token:e,channel:"xsy_official",user_code:XSY_INVITECODE}),a=this.getDateTime();const s={url:`${this.baseURL}/user/register`,method:"post",headers:{...this.headers,Sign:helper.encryptMd5Data(r+a+helper.key),Time:a},body:JSON.stringify({data:r}),use_proxy:!0};try{const{data:e,status:t}=await Request(s);if("y"==t){const{token:t,user_id:o,username:r,nickname:a,parent_name:s,phone:n,avatar:i,password:h}=JSON.parse(helper.decryptData(e));return`token=${t};uid=${o};userCode=${s};userInfo=${encodeURIComponent(JSON.stringify({uid:o,avatar:i,username:r,nickname:a,bindCode:s,phone:n}))};`}throw console.log("❌注册失败"),e}catch(e){throw e||"注册失败, 接口可能gg喽~"}}}}
+function Invite() {
+  return new (class {
+    constructor() {
+      (this.baseURL = "https://h5xsycr3.com/webapi"),
+        (this.defaultCookie = `userCode=${XSY_INVITECODE}; channel=xsy_official;`),
+        (this.headers = {
+          "Content-Type": "application/json",
+          "User-Agent":
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1",
+          Origin: "https://h5xsycr3.com",
+          Host: "h5xsycr3.com",
+          Device: "h5",
+          Version: "1.0",
+          Cookie: this.defaultCookie,
+        });
+    }
+    getDateTime() {
+      var e =
+          arguments.length > 0 && void 0 !== arguments[0]
+            ? arguments[0]
+            : "yyyy-MM-dd hh:mm:ss",
+        t = new Date(),
+        o = {
+          "M+": t.getMonth() + 1,
+          "d+": t.getDate(),
+          "h+": t.getHours(),
+          "m+": t.getMinutes(),
+          "s+": t.getSeconds(),
+          "q+": Math.floor((t.getMonth() + 3) / 3),
+          S: t.getMilliseconds(),
+        };
+      for (var r in (/(y+)/.test(e) &&
+        (e = e.replace(
+          RegExp.$1,
+          (t.getFullYear() + "").substr(4 - RegExp.$1.length)
+        )),
+      o))
+        new RegExp("(" + r + ")").test(e) &&
+          (e = e.replace(
+            RegExp.$1,
+            1 == RegExp.$1.length
+              ? o[r]
+              : ("00" + o[r]).substr(("" + o[r]).length)
+          ));
+      return e;
+    }
+    async getCaptcha() {
+      let e = this.getDateTime(),
+        t = "HlybAwPeM8WtNpenYNjEPw==";
+      const o = {
+        url: `${this.baseURL}/system/captcha`,
+        method: "post",
+        headers: {
+          ...this.headers,
+          Sign: helper.encryptMd5Data(t + e + helper.key),
+          Time: e,
+        },
+        body: JSON.stringify({ data: t }),
+        use_proxy: !0,
+      };
+      try {
+        const { data: e, status: t } = await Request(o);
+        if ("y" == t) {
+          const { token: t, code: o } = JSON.parse(helper.decryptData(e));
+          return { token: t, code: o };
+        }
+        throw (console.log("❌校验失败"), e);
+      } catch (e) {
+        throw e || "验证失败, 接口可能gg喽~";
+      }
+    }
+    async register(e, t) {
+      const o = (e = 3) => {
+        var t = "abcdefghijklmnopqrstuvwxyz0123456789",
+          o = "yuheng";
+        for (let r = 0; r < e; r++)
+          o += t.charAt(Math.floor(Math.random() * t.length));
+        return o;
+      };
+      let r = helper.encryptData({
+          account: o(),
+          password: "yuhengyy6",
+          confirm_password: "yuhengyy6",
+          code: t,
+          code_token: e,
+          channel: "xsy_official",
+          user_code: XSY_INVITECODE,
+        }),
+        a = this.getDateTime();
+      const s = {
+        url: `${this.baseURL}/user/register`,
+        method: "post",
+        headers: {
+          ...this.headers,
+          Sign: helper.encryptMd5Data(r + a + helper.key),
+          Time: a,
+        },
+        body: JSON.stringify({ data: r }),
+        use_proxy: !0,
+      };
+      try {
+        const { data: e, status: t } = await Request(s);
+        if ("y" == t) {
+          const {
+            token: t,
+            user_id: o,
+            username: r,
+            nickname: a,
+            parent_name: s,
+            phone: n,
+            avatar: i,
+            password: h,
+          } = JSON.parse(helper.decryptData(e));
+          return `token=${t};uid=${o};userCode=${s};userInfo=${encodeURIComponent(
+            JSON.stringify({
+              uid: o,
+              avatar: i,
+              username: r,
+              nickname: a,
+              bindCode: s,
+              phone: n,
+            })
+          )};`;
+        }
+        throw (console.log("❌注册失败"), e);
+      } catch (e) {
+        throw e || "注册失败, 接口可能gg喽~";
+      }
+    }
+  })();
+}
 // prettier-ignore
 function CryptoHelper(){return new class{constructor(){this.key="5dbOjYFhMxaAuE0i"}decryptData(t,r=this.key){var e=CryptoJS.enc.Utf8.parse(r);return CryptoJS.AES.decrypt(t,e,{mode:CryptoJS.mode.ECB,padding:CryptoJS.pad.Pkcs7}).toString(CryptoJS.enc.Utf8)}encryptData(t,r=this.key){var e=CryptoJS.enc.Utf8.parse(r);return CryptoJS.AES.encrypt(JSON.stringify(t),e,{mode:CryptoJS.mode.ECB,padding:CryptoJS.pad.Pkcs7}).toString()}encryptMd5Data(t){return CryptoJS.MD5(t).toString()}}}
 // prettier-ignore
