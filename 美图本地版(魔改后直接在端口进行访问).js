@@ -54,13 +54,11 @@ const main = async () => {
     if (!SOURCE) throw "未知错误~";
 
     // if (!images || images.length === 0) throw "images 数组为空";
-
     const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
-
     // if (!images || images.length === 0) throw "images 数组为空";
     const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");
-
     const html = render(images, title);
+
     // $.setdata(html, "meitu_html");
     // $.msg(operator(SOURCE), CATEGORY, title, {
     //   $open: "https://mei.tu",
@@ -70,19 +68,12 @@ const main = async () => {
     
     // 路由处理器，当访问根路径时返回生成的 HTML
     app.get('/', (req, res) => {
-      // const html = render(images, title);
       res.send(html);
     });
-    app.use(express.static(__dirname));
     // 启动服务器
-    // app.listen(port, () => {
-    //   console.log(`Server is listening at http://localhost:${port}`);
-    // });
-    app.listen(app.get('port'), function(){
-      console.log( 'Express started on http://localhost:' + 
-          app.get('port') + '; press Ctrl-C to terminate.' );
-  });
-  
+    app.listen(port, () => {
+      console.log(`Server is listening at http://localhost:${port}`);
+    });
   
   } 
   catch (e) {
