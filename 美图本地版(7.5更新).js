@@ -6,34 +6,57 @@ const cheerio = require('cheerio');
 const http = require('http');
 const https = require('https');
 const { URL } = require('url');
-// 创建一个 HttpsProxyAgent 实例  
 const { HttpsProxyAgent } = require('https-proxy-agent');
 const httpsAgent = new HttpsProxyAgent(`http://127.0.0.1:7890`);
+
+
 // 使生成的网页能在本地端口访问
-const express = require('express');const app = express();const port = 3000;
+const express = require('express');
+const app = express();
+const port = 3000;
+
+// 创建一个 HttpsProxyAgent 实例  
+// const proxy = new HttpsProxyAgent('http://localhost:7890');
+
 
 const $ = new Env("美图写真");
 // 图源
 const GRAPHIC_SOURCE = {
   "4KHD": "HD4K",
-  "115ZY": "ZY115",
+  "115ZY": "ZY115",//  街拍偷拍  丝袜美腿  欧美风情 卡通漫画  网友自拍   露出激情"唯美写真"女优情报”
   // 新時代的我們: 'NEWERA',
-  // 1024: "CAOLIU",
-  // MMT: 'MMT'
+  1024: "CAOLIU",
+  MMT: 'MMT'
 };
 // 用户选择
-const [SOURCE, CATEGORY] = ($.getdata("meitu_type") ?? "4KHD - 丝袜美腿")
+const [SOURCE, CATEGORY] = ($.getdata("meitu_type") ?? "MMT - 街拍偷拍 ")
   .split("-")
   .map((it) => it.trim());//使用 trim() 方法去除每个数组元素的首尾空格。
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
-//Math.random() 生成一个0到1之间的随机数。Math.floor() 将结果向下取整，返回一个整数。
 
 
-function render(list, title) {
-  return `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${title}</title><style>*{margin:0;padding:0;}h1{padding:10px;font-size:1em;}ul{display:flex;flex-wrap:wrap;flex-direction:row;justify-content:center;align-items:center;}li{list-style:none;}img{width:100%;}</style></head><body><h1>${title}</h1><ul>${list
-    .map((it) => `<li><img src="${it}" alt="4khd"></li>`)
-    .join("")}</ul></body></html>`;
+// function render(list, title) {
+//   return `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${title}</title><style>*{margin:0;padding:0;}h1{padding:10px;font-size:1em;}ul{display:flex;flex-wrap:wrap;flex-direction:row;justify-content:center;align-items:center;}li{list-style:none;}img{width:100%;}</style></head>
+//   <body>
+//   <h1>${title}</h1>
+//   <ul>${list
+//     .map((it) => `<li><img src="${it}" alt="4khd"></li>`)
+//     .join("")}</ul>
+//     </body>
+//     </html>`;
+// }
+
+function render(imageDataArray, title) {
+  const imageTags = imageDataArray.map(imageData => `<li><img src="data:image/jpeg;base64,${imageData}" alt="Displayed Image"></li>`).join('');
+  return `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${title}</title><style>*{margin:0;padding:0;}h1{padding:10px;font-size:1em;}ul{display:flex;flex-wrap:wrap;flex-direction:row;justify-content:center;align-items:center;}li{list-style:none;}img{width:100%;}</style></head>
+  <body>
+  <h1>${title}</h1>
+  <ul>${imageTags}</ul>
+  </body>
+  </html>`;
 }
+
+
 
 
 //------主函数处理逻辑------
@@ -48,28 +71,38 @@ const main = async () => {
       "cheerio"
     );
     if (!SOURCE) throw "未知错误~";
-    const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
-    //GRAPHIC_SOURCE[SOURCE] 返回一个函数。eval() 执行这个函数。使用 await 等待函数执行完成，获取返回的 images 和 title。
-    const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");//可以省略，作为缩略图
-    const html = render(images, title); //生成网页
-    // $.setdata(html, "meitu_html");
-    // $.msg(operator(SOURCE), CATEGORY, title, {
-    //   $open: "https://mei.tu",
-    //   $media: thumb,
-    // });
-    
-    // 路由处理器，当访问根路径时返回生成的 HTML
+    const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])(); //GRAPHIC_SOURCE[SOURCE] 返回一个函数。eval() 执行这个函数。使用 await 等待函数执行完成，获取返回的 images 和 title。
+    //返回的images是一个数组，里面是图片的链接。title是一个字符串，是网页的标题。
+    // const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");//可以省略，作为缩略图
+    const imageBase64Array = await Promise.all(images.map(async (imageUrl) => {
+      try {
+        const response = await axios({
+          method: 'get',
+          url: imageUrl,
+          responseType: 'arraybuffer',
+          headers: {
+            'Referer': 'https://mm.tvv.tw'
+          }
+        });
+        return Buffer.from(response.data, 'binary').toString('base64');
+      } catch (error) {
+        console.error('获取图片出错:', error);
+        return null;
+      }
+    }));
+
+    const filteredImages = imageBase64Array.filter(imageData => imageData !== null);
+    const html = render(filteredImages, title);
+
     app.get('/', (req, res) => {
-      // const html = render(images, title);
-      res.send(html);  //res.send(html) 将生成的 HTML 内容发送给客户端，返回网页内容。
+      res.send(html);
     });
-    // 启动服务器
-    app.listen(app.get('port'), function(){
-      console.log( 'Express started on http://localhost:' + 
-          app.get('port') + 'press Ctrl-C to terminate.' );
-  }); //后面的那个函数是一个回调函数，在服务器开始监听指定端口后被调用。回调函数的作用是在异步操作完成后执行特定代码。在这里，它用于在服务器启动并开始监听端口后输出日志消息。
+  // 启动服务器
+  app.listen(app.get('port'), () => {
+    console.log('Express started on http://localhost:' + app.get('port'));
+  });
 
-
+//------下载部分-------
   const dir = 'meitu';
   //重新创建文件夹
   if (fs.existsSync(dir)) {
@@ -83,7 +116,8 @@ const main = async () => {
       method: 'GET',
       url: imageUrl,
       responseType: 'stream',
-      httpsAgent // 添加代理(这里也要否则400报错)
+      httpsAgent, // 添加代理(这里也要否则400报错)
+      headers:{'Referer': 'https://mm.tvv.tw'}, // 添加Referer头部
     });
     const timestamp = Date.now(); // 获取当前时间戳
     // const filePath = path.join(dir, `美图_${index}_${timestamp}.jpg`);
@@ -314,7 +348,7 @@ async function ZY115() {
   const getDetail = (url, title) => {
     console.log(`[𝟏𝟏𝟓𝐙𝐘] 📚开始获取：${title}`);
     return $.http
-      .get(url)
+      .get(url,{httpsAgent})
       .then(({ body }) => {
         const _$ = $.cheerio.load(body);
         return _$("#read_tpc>img")
@@ -359,7 +393,7 @@ async function MMT() {
   const getDetail = (url, title) => {
     console.log(`[𝐌𝐌𝐓] 📚开始获取：${title}`);
     return $.http
-      .get(url)
+      .get(url,{httpsAgent,headers:{'Referer': 'https://mm.tvv.tw'}})
       .then(({ body }) => {
         const _$ = $.cheerio.load(body);
         return _$(".blog-details-text img")
