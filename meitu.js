@@ -35,10 +35,10 @@ const main = async () => {
 
     const html = render(images, title);
     $.setdata(html, "meitu_html");
-    $.msg(operator(SOURCE), CATEGORY, title, {
-      $open: "https://mei.tu",
-      $media: thumb,
-    });
+   // $.msg(operator(SOURCE), CATEGORY, title, {
+    //  $open: "https://mei.tu",
+//      $media: thumb,
+ //   });
   } catch (e) {
     $.logErr(e);
   }
