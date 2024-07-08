@@ -19,6 +19,8 @@ function render(list, title) {
     .map((it) => `<li><img src="${it}" alt="4khd"></li>`)
     .join("")}</ul></body></html>`;
 }
+
+
 const main = async () => {
   try {
     // await showNotice();
@@ -188,7 +190,7 @@ async function MMT() {
   const getDetail = (url, title) => {
     console.log(`[𝐌𝐌𝐓] 📚开始获取：${title}`);
     return $.http
-      .get(url,{headers:{'Referer': 'https://mm.tvv.tw'}})
+      .get(url)
       .then(({ body }) => {
         const _$ = $.cheerio.load(body);
         return _$(".blog-details-text img")
