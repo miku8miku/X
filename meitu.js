@@ -35,7 +35,6 @@ function render(imageDataArray, title) {
     li { list-style: none; width: 25%; box-sizing: border-box; padding: 10px; }
     img { width: 100%; height: auto; }
   </style>
-  
   </head>
   <body>
   <h1>${title}</h1>
@@ -58,7 +57,7 @@ const main = async () => {
     const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
     const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");
 
-    const imageBase64Array = await Promise.all(images.map((imageUrl) => {
+    const getBinaryImage = (imageUrl) => {
       return new Promise((resolve, reject) => {
         $.http.get({
           url: imageUrl,
@@ -68,15 +67,15 @@ const main = async () => {
         }, (error, response, data) => {
           if (error) {
             console.error('获取图片出错:', error);
-            resolve(null);
+            reject(error);
           } else {
-            const base64String = Buffer.from(data, 'binary').toString('base64');
-            resolve(base64String);
+            // 直接将 data 作为 Buffer 返回，data 已经是二进制数据
+            resolve(data);
           }
         });
       });
-    }));
-    const filteredImages = imageBase64Array.filter(imageData => imageData !== null);
+    };
+    const filteredImages = getBinaryImage.filter(imageData => imageData !== null);
     const html = render(filteredImages, title);
     // const html = render(images, title);
 
