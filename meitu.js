@@ -189,7 +189,7 @@ async function MMT() {
   };
   const getDetail = (url, title) => {
     console.log(`[𝐌𝐌𝐓] 📚开始获取：${title}`);
-    return $.axios
+    return axios
       .get(url,{headers:{'Referer': 'https://mm.tvv.tw'}})
       .then(({ body }) => {
         const _$ = $.cheerio.load(body);
