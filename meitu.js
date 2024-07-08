@@ -33,7 +33,30 @@ const main = async () => {
     if (!SOURCE) throw "未知错误~";
     const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
     const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");
-    const html = render(images, title);
+
+    const imageBase64Array = await Promise.all(images.map((imageUrl) => {
+      return new Promise((resolve, reject) => {
+        $.http.get({
+          url: imageUrl,
+          headers: {
+            'Referer': 'https://mm.tvv.tw'
+          }
+        }, (error, response, data) => {
+          if (error) {
+            console.error('获取图片出错:', error);
+            resolve(null);
+          } else {
+            const base64String = Buffer.from(data, 'binary').toString('base64');
+            resolve(base64String);
+          }
+        });
+      });
+    }));
+    const filteredImages = imageBase64Array.filter(imageData => imageData !== null);
+    const html = render(filteredImages, title);
+    // const html = render(images, title);
+
+
     $.setdata(html, "meitu_html");
     $.msg(operator(SOURCE), CATEGORY, title, {
       $open: "https://mei.tu",
