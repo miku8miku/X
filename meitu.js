@@ -273,45 +273,31 @@ function Env(t, e) {
       this.env = t;
     }
     send(t, e = "GET") {
-      t = typeof t === "string" ? { url: t } : t;
-  
-      // 将自定义请求头添加到请求对象中
-      const requestOptions = {
-        method: e,
-        url: t.url,
-        headers: t.headers || {}, // 添加这一行来处理自定义请求头
-        timeout: t.timeout
-      };
-  
-      const i = new Promise((resolve, reject) => {
-        this.env.request(requestOptions, (error, response, body) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(response);
-          }
+      t = "string" == typeof t ? { url: t } : t;
+      let s = this.get;
+      "POST" === e && (s = this.post);
+      const i = new Promise((e, i) => {
+        s.call(this, t, (t, s, o) => {
+          t ? i(t) : e(s);
         });
       });
-  
       return t.timeout
         ? ((t, e = 1e3) =>
             Promise.race([
               t,
-              new Promise((resolve, reject) => {
+              new Promise((t, s) => {
                 setTimeout(() => {
-                  reject(new Error("请求超时"));
+                  s(new Error("请求超时"));
                 }, e);
               }),
             ]))(i, t.timeout)
         : i;
     }
-  
     get(t) {
-      return this.send({ ...t, method: "GET" });
+      return this.send.call(this.env, t);
     }
-  
     post(t) {
-      return this.send({ ...t, method: "POST" });
+      return this.send.call(this.env, t, "POST");
     }
   }
   return new (class {
