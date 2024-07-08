@@ -1,0 +1,83 @@
+{
+  "id": "kb.app.sub",
+  "name": "kb 脚本订阅",
+  "author": "@yuheng",
+  "icon": "https://avatars.githubusercontent.com/u/52441374?v=4",
+  "repo": "https://github.com/miku8miku/X",
+  "apps": [
+    {
+      "id": "kb.meitu",
+      "name": "美图鉴赏",
+      "descs_html": [
+        "<p style='color:#3498db;text-align:center;'>嘿嘿嘿😊</p>"
+      ],
+      "keys": ["meitu_type"],
+      "settings": [
+        {
+          "id": "meitu_type",
+          "name": "推荐类型",
+          "val": "4KHD",
+          "type": "radios",
+          "desc": "选择图源, 默认'4KHD'",
+          "items": [
+            {
+              "key": "4KHD - popular",
+              "label": "4KHD - popular"
+            },
+            {
+              "key": "4KHD - cosplay",
+              "label": "4KHD - cosplay"
+            },
+            {
+              "key": "4KHD - album",
+              "label": "4KHD - album"
+            },
+            {
+              "key": "115ZY - 街拍偷拍",
+              "label": "115ZY - 街拍偷拍"
+            },
+            {
+              "key": "115ZY - 丝袜美腿",
+              "label": "115ZY - 丝袜美腿"
+            },
+            {
+              "key": "115ZY - 欧美风情",
+              "label": "115ZY - 欧美风情"
+            },
+            {
+              "key": "115ZY - 卡通漫画",
+              "label": "115ZY - 卡通漫画"
+            },
+            {
+              "key": "115ZY - 网友自拍",
+              "label": "115ZY - 网友自拍"
+            },
+            {
+              "key": "115ZY - 露出激情",
+              "label": "115ZY - 露出激情"
+            },
+            {
+              "key": "115ZY - 唯美写真",
+              "label": "115ZY - 唯美写真"
+            },
+            {
+              "key": "115ZY - 女优情报",
+              "label": "115ZY - 女优情报"
+            },
+            {
+              "key": "MMT - 唯美写真",
+              "label": "MMT - 唯美写真"
+            }
+          ]
+        }
+      ],
+      "author": "@yuheng",
+      "repo": "https://github.com/Yuheng0101/X",
+      "icons": [
+        "https://raw.githubusercontent.com/miku8miku/X/main/Assets/bus.png",
+        "https://raw.githubusercontent.com/miku8miku/X/main/Assets/bus.png"
+      ],
+      "script": "https://raw.githubusercontent.com/miku8miku/X/main/meitu.js"
+    }
+  ]
+}
