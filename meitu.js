@@ -27,7 +27,7 @@ const main = async () => {
       "createCheerio",
       "cheerio"
     );
-    
+
     if (!SOURCE) throw "未知错误~";
     const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
     const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");
@@ -188,7 +188,7 @@ async function MMT() {
   const getDetail = (url, title) => {
     console.log(`[𝐌𝐌𝐓] 📚开始获取：${title}`);
     return $.http
-      .get(url,{httpsAgent,headers:{'Referer': 'https://mm.tvv.tw'}})
+      .get(url,{headers:{'Referer': 'https://mm.tvv.tw'}})
       .then(({ body }) => {
         const _$ = $.cheerio.load(body);
         return _$(".blog-details-text img")
