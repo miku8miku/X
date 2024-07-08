@@ -10,14 +10,38 @@ const [SOURCE, CATEGORY] = ($.getdata("meitu_type") ?? "1024 - 丝袜美腿")
   .split("-")
   .map((it) => it.trim());
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
-function render(list, title) {
-  return `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${title}</title><style>*{margin:0;padding:0;}h1{padding:10px;font-size:1em;}ul{display:flex;flex-wrap:wrap;flex-direction:row;justify-content:center;align-items:center;}
-  li { list-style: none; width: 25%; box-sizing: border-box; padding: 10px; }
-  img{width:100%;}
+// function render(list, title) {
+//   return `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${title}</title><style>*{margin:0;padding:0;}h1{padding:10px;font-size:1em;}ul{display:flex;flex-wrap:wrap;flex-direction:row;justify-content:center;align-items:center;}
+//   li { list-style: none; width: 25%; box-sizing: border-box; padding: 10px; }
+//   img{width:100%;}
+//   </style>
+//   </head><body><h1>${title}</h1><ul>${list
+//     .map((it) => `<li><img src="${it}" alt="4khd"></li>`)
+//     .join("")}</ul></body></html>`;
+// }
+
+//////修改排版----通过修改li实现
+function render(imageDataArray, title) {
+  const imageTags = imageDataArray.map(imageData => `<li><img src="data:image/jpeg;base64,${imageData}" alt="Displayed Image"></li>`).join('');
+  return `<!DOCTYPE html><html lang="zh-CN">
+  <head>
+  
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+  <style>
+    * { margin: 0; padding: 0; }
+    h1 { padding: 10px; font-size: 1em; text-align: center; }
+    ul { display: flex; flex-wrap: wrap; justify-content: center; }
+    li { list-style: none; width: 25%; box-sizing: border-box; padding: 10px; }
+    img { width: 100%; height: auto; }
   </style>
-  </head><body><h1>${title}</h1><ul>${list
-    .map((it) => `<li><img src="${it}" alt="4khd"></li>`)
-    .join("")}</ul></body></html>`;
+  
+  </head>
+  <body>
+  <h1>${title}</h1>
+  <ul>${imageTags}</ul>
+  </body>
+  </html>`;
 }
 
 
