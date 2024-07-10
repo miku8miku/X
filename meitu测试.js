@@ -55,32 +55,17 @@ const main = async () => {
     const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");
     // console.log(images);
 
-    // const getBase64Image = (imageUrl) => {
-    //   return new Promise((resolve, reject) => {
-    //     $.http.get({
-    //       url: imageUrl,
-    //       responseType: 'buffer',
-    //       headers: {
-    //         'Referer': 'https://mm.tvv.tw'
-    //       },
-    //       encoding: null // Ensure response body is a buffer
-    //     }, (error, response, data) => {
-    //       if (error) {
-    //         console.error('获取图片出错:', error);
-    //         reject(error);
-    //       } else {
-    //         const base64String = Buffer.from(data, 'binary').toString('base64');
-    //         resolve(base64String);
-    //       }
-    //     });
-    //   });
-    // };
     
+    // const imageBase64Array = await Promise.all(images.map(async (imageUrl) => {
+    //     const response = await $.http.get(imageUrl,{responseType: 'arraybuffer',headers:{'Referer': 'https://mm.tvv.tw'}});
+    //     // console.log(response.body);
+    //     return Buffer.from(response.rawBody, 'binary').toString('base64');
+    // }));
+
     const imageBase64Array = await Promise.all(images.map(async (imageUrl) => {
-        const response = await $.http.get(imageUrl,{responseType: 'arraybuffer',headers:{'Referer': 'https://mm.tvv.tw'}});
-        // console.log(response.body);
-        return Buffer.from(response.rawBody, 'binary').toString('base64');
-    }));
+      const response = await $.http.get(imageUrl,{responseType: 'arraybuffer',headers:{'Referer': 'https://mm.tvv.tw'}});
+      return response.rawBody.toBase64();
+  }));
 
     const filteredImages = imageBase64Array.filter(imageData => imageData !== null);
     const html = render(filteredImages, title);
