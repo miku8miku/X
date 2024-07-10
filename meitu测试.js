@@ -40,6 +40,52 @@ function render(imageDataArray, title) {
   </html>`;
 }
 
+class Buffer {
+  constructor(input) {
+    if (typeof input === 'string') {
+      this.buffer = new Uint8Array(Buffer.fromBase64(input));
+    } else if (input instanceof ArrayBuffer) {
+      this.buffer = new Uint8Array(input);
+    } else if (input instanceof Uint8Array) {
+      this.buffer = input;
+    } else {
+      throw new TypeError('Invalid input type');
+    }
+  }
+
+  static fromBase64(base64) {
+    const binaryString = atob(base64);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes;
+  }
+
+  toBase64() {
+    let binary = '';
+    const len = this.buffer.byteLength;
+    for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(this.buffer[i]);
+    }
+    return btoa(binary);
+  }
+
+  toString(encoding) {
+    if (encoding === 'base64') {
+      return this.toBase64();
+    } else {
+      throw new Error('Unsupported encoding');
+    }
+  }
+}
+
+const arrayBufferToBase64 = (arrayBuffer) => {
+  const buffer = new Buffer(arrayBuffer);
+  return buffer.toString('base64');
+};
+
 
 const main = async () => {
   try {
@@ -64,9 +110,10 @@ const main = async () => {
 
     const imageBase64Array = await Promise.all(images.map(async (imageUrl) => {
       const response = await $.http.get(imageUrl,{responseType: 'arraybuffer',headers:{'Referer': 'https://mm.tvv.tw'}});
-      const uint8Array = new Uint8Array(response.rawBody);
-      const stringFromCharCode = String.fromCharCode.apply(null, uint8Array);
-      const base64String = btoa(stringFromCharCode);
+      // const uint8Array = new Uint8Array(response.rawBody);
+      // const stringFromCharCode = String.fromCharCode.apply(null, uint8Array);
+      // const base64String = btoa(stringFromCharCode);
+      base64String = arrayBufferToBase64(response.rawBody);
       return base64String
   }));
 
