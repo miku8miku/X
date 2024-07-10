@@ -82,7 +82,7 @@ const main = async () => {
         // console.log(response.body);
         return Buffer.from(response.rawBody, 'binary').toString('base64');
       } catch (error) {
-        console.error('获取图片出错:', error);
+        console.error(error);
         return null;
       }
     }));
