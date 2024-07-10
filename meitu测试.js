@@ -64,7 +64,10 @@ const main = async () => {
 
     const imageBase64Array = await Promise.all(images.map(async (imageUrl) => {
       const response = await $.http.get(imageUrl,{responseType: 'arraybuffer',headers:{'Referer': 'https://mm.tvv.tw'}});
-      return btoa(response.rawBody)
+      const uint8Array = new Uint8Array(response.rawBody);
+      const stringFromCharCode = String.fromCharCode.apply(null, uint8Array);
+      const base64String = btoa(stringFromCharCode);
+      return base64String
   }));
 
     const filteredImages = imageBase64Array.filter(imageData => imageData !== null);
