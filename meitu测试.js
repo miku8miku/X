@@ -77,14 +77,9 @@ const main = async () => {
     // };
     
     const imageBase64Array = await Promise.all(images.map(async (imageUrl) => {
-      try {
         const response = await $.http.get(imageUrl,{responseType: 'arraybuffer',headers:{'Referer': 'https://mm.tvv.tw'}});
         // console.log(response.body);
         return Buffer.from(response.rawBody, 'binary').toString('base64');
-      } catch (error) {
-        console.error(error);
-        return null;
-      }
     }));
 
     const filteredImages = imageBase64Array.filter(imageData => imageData !== null);
