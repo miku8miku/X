@@ -1,4 +1,10 @@
-const $ = new Env("美图写真");
+// const axios = require('axios');
+// const { HttpsProxyAgent } = require('https-proxy-agent');
+// const httpsAgent = new HttpsProxyAgent(`http://127.0.0.1:7890`);
+
+
+
+const $ = new Env("美图写真测试");
 // 图源
 const GRAPHIC_SOURCE = {
   "4KHD": "HD4K",
@@ -6,7 +12,7 @@ const GRAPHIC_SOURCE = {
   MMT: 'MMT'
 };
 // 用户选择
-const [SOURCE, CATEGORY] = ($.getdata("meitu_type") ?? "1024 - 丝袜美腿")
+const [SOURCE, CATEGORY] = ($.getdata("meitu_type") ?? "MMT - 丝袜美腿")
   .split("-")
   .map((it) => it.trim());
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
@@ -47,37 +53,45 @@ const main = async () => {
     if (!SOURCE) throw "未知错误~";
     const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
     const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");
-    
-    const getBase64Image = (imageUrl) => {
-      return new Promise((resolve, reject) => {
-        $.http.get({
-          url: imageUrl,
-          headers: {
-            'Referer': 'https://mm.tvv.tw'
-          },
-          encoding: null // Ensure response body is a buffer
-        }, (error, response, data) => {
-          if (error) {
-            console.error('获取图片出错:', error);
-            reject(error);
-          } else {
-            const base64String = Buffer.from(data, 'binary').toString('base64');
-            resolve(base64String);
-          }
-        });
-      });
-    };
+    // console.log(images);
+
+    // const getBase64Image = (imageUrl) => {
+    //   return new Promise((resolve, reject) => {
+    //     $.http.get({
+    //       url: imageUrl,
+    //       responseType: 'buffer',
+    //       headers: {
+    //         'Referer': 'https://mm.tvv.tw'
+    //       },
+    //       encoding: null // Ensure response body is a buffer
+    //     }, (error, response, data) => {
+    //       if (error) {
+    //         console.error('获取图片出错:', error);
+    //         reject(error);
+    //       } else {
+    //         const base64String = Buffer.from(data, 'binary').toString('base64');
+    //         resolve(base64String);
+    //       }
+    //     });
+    //   });
+    // };
     
     const imageBase64Array = await Promise.all(images.map(async (imageUrl) => {
       try {
-        return await getBase64Image(imageUrl);
+        const response = await $.http.get(imageUrl,{responseType: 'arraybuffer',headers:{'Referer': 'https://mm.tvv.tw'}});
+        // console.log(response.body);
+        return Buffer.from(response.rawBody, 'binary').toString('base64');
       } catch (error) {
+        console.error('获取图片出错:', error);
         return null;
       }
     }));
-    const filteredImages = getBase64Image.filter(imageData => imageData !== null);
+
+    const filteredImages = imageBase64Array.filter(imageData => imageData !== null);
     const html = render(filteredImages, title);
+
     // const html = render(images, title);
+
     $.setdata(html, "meitu_html");
     $.msg(operator(SOURCE), CATEGORY, title, {
       $open: "https://mei.tu",
@@ -91,10 +105,12 @@ const main = async () => {
 
 if (typeof $request === "undefined") {
   main().finally(() => $.done({}));
-} else {
+} 
+else {
   (async () => {
     const body = $.getdata("meitu_html");
     !body && (await main());
+
     const response = {
       headers: { "content-type": "text/html" },
       status: $.isQuanX() ? "HTTP/1.1 200 OK" : 200,
@@ -103,6 +119,9 @@ if (typeof $request === "undefined") {
     $.done($.isQuanX() ? response : { response });
   })();
 }
+
+// main().catch(console.error);
+
 
 // 4khd
 async function HD4K() {
@@ -126,7 +145,7 @@ async function HD4K() {
           .get()
           .filter((it) => it.url.endsWith(".html"));
       })
-      .catch((err) => console.logErr(err));
+      .catch((err) => console.error(err));
   };
   const getDetail = async (url, title) => {
     console.log(`[𝟒𝐊𝐇𝐃] 📚开始获取：${title}`);
@@ -139,7 +158,7 @@ async function HD4K() {
           .get()
           .filter((it) => it.match(/webp\?w=\d+$/));
       })
-      .catch((err) => console.logErr(err));
+      .catch((err) => console.error(err));
   };
   try {
     const list = await getList();
