@@ -77,7 +77,8 @@
         "https://raw.githubusercontent.com/miku8miku/X/main/Assets/bus.png",
         "https://raw.githubusercontent.com/miku8miku/X/main/Assets/bus.png"
       ],
-      "script": "https://raw.githubusercontent.com/miku8miku/X/main/meitu测试.js"
+      "script": "https://raw.githubusercontent.com/miku8miku/X/main/meitu.js"
+  
     }
   ]
 }
