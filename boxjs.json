@@ -154,28 +154,5 @@
       ],
       "script": "https://raw.githubusercontent.com/miku8miku/X/main/javday.js"   
     }
-
-    ,{
-      "id": "sliverkiss_Bnmdhg",
-      "name": "巴奴777",
-      "icons": [
-        "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Bnmdhg.png",
-        "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Bnmdhg.png"
-      ],
-      "keys": ["bnmdhg"],
-      "settings": [
-        {
-          "id": "bnmdhg",
-          "name": "会员Cookie数据",
-          "val": "",
-          "type": "textarea",
-          "autoGrow": true,
-          "desc": "会员Cookie数据"
-        }
-      ],
-      "author": "@yuheng",
-      "repo": "https://github.com/miku8miku/X",
-      "script": "https://raw.githubusercontent.com/miku8miku/X/main/javday.js"  
-    }
   ]
 }
