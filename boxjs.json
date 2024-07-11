@@ -72,7 +72,7 @@
         }
       ],
       "author": "@yuheng",
-      "repo": "https://github.com/Yuheng0101/X",
+      "repo": "https://github.com/miku8miku/X",
       "icons": [
         "https://raw.githubusercontent.com/miku8miku/X/main/Assets/bus.png",
         "https://raw.githubusercontent.com/miku8miku/X/main/Assets/bus.png"
@@ -81,7 +81,7 @@
   
     },
     {
-      "id": "yuheng.javday",
+      "id": "kb.javday",
       "name": "𝐉𝐀𝐕𝐃𝐚𝐲每日推荐",
       "descs_html": [
         "<a style='color:#686de0;display:block;text-align:center;' target='_blank' href='https://raw.githubusercontent.com/miku8miku/X/main/javday.js'>666</a>"
@@ -152,13 +152,14 @@
         "https://raw.githubusercontent.com/miku8miku/X/main/Assets/javday.png",
         "https://raw.githubusercontent.com/miku8miku/X/main/Assets/javday.png"
       ],
-      "script": "https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/javday.js"   
+      "script": "https://raw.githubusercontent.com/miku8miku/X/main/javday.js"   
     }
+
     ,{
       "id": "sliverkiss_Bnmdhg",
-      "name": "巴奴毛肚",
+      "name": "巴奴666",
       "author": "@smallfawn",
-      "repo": "",
+      "repo": "https://github.com/miku8miku/X",
       "icons": [
         "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Bnmdhg.png",
         "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Bnmdhg.png"
@@ -174,7 +175,7 @@
           "desc": "会员Cookie数据"
         }
       ],
-      "script": "https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/javday.js"  
+      "script": "https://raw.githubusercontent.com/miku8miku/X/main/javday.js"  
     }
   ]
 }
