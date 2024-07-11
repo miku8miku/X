@@ -173,14 +173,18 @@ function loadRemoteScriptByCache(scriptUrl, functionName, scriptName) {
 // 消息通知
 async function showMsg(n, o, i, t) {
     if ($.isShadowrocket()) {
-        const content = [i]
-        t?.['open-url'] && content.push(`🔗打开链接: ${t['open-url']}`)
-        t?.['media-url'] && content.push(`🎬媒体链接: ${t['media-url']}`)
-        $.log('==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3==============', n, o, content.join('\n'))
-        try {
-            await notify.sendNotify(`${n}\n${o}`, content.join('\n'))
-        } catch (e) {
-            $.warn('没有找到sendNotify.js文件 不发送通知')
+        // const content = [i]
+        // t?.['open-url'] && content.push(`🔗打开链接: ${t['open-url']}`)
+        // t?.['media-url'] && content.push(`🎬媒体链接: ${t['media-url']}`)
+        if (typeof t === 'object') {
+            if (t?.['text']) {
+                Object.assign(t, { action: 'clipboard', text: t['text'] })
+            } else if (t?.['open-url']) {
+                Object.assign(t, { action: 'open-url', url: t['open-url'] })
+            }
+            $notification.post(n, o, i, t)
+        } else {
+            $.msg(n, o, i, t)
         }
     }
     // 新版surge
