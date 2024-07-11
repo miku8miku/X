@@ -90,11 +90,9 @@ const arrayBufferToBase64 = (arrayBuffer) => {
 const main = async () => {
   try {
     // await showNotice();
-    await loadRemoteScriptByCache(
-      "https://cdn.jsdelivr.net/gh/Yuheng0101/X@main/Utils/cheerio.js",
-      "createCheerio",
-      "cheerio"
-    );
+    await loadRemoteScriptByCache('https://cdn.jsdelivr.net/gh/Yuheng0101/X@main/Utils/Buffer.min.js', 'loadBuffer', 'Buffer')
+    await loadRemoteScriptByCache('https://cdn.jsdelivr.net/gh/Yuheng0101/X@main/Utils/cheerio.js', 'createCheerio', 'cheerio')
+    await loadRemoteScriptByCache('https://cdn.jsdelivr.net/gh/Yuheng0101/X@main/Utils/CryptoJS.min.js', 'createCryptoJS', 'CryptoJS')
 
     if (!SOURCE) throw "未知错误~";
     const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
@@ -344,6 +342,116 @@ function loadRemoteScriptByCache(scriptUrl, functionName, scriptName) {
       }
   })
 }
+/**
+ * 网络请求基于env.js的二次封装
+ * @param {*} o 相关参数
+ * @param {string} o.url 请求地址
+ * @param {string} o.type 请求类型
+ * @param {object} o.headers 请求头
+ * @param {object} o.params 请求参数
+ * @param {object} o.body 请求体 post => json
+ * @param {object} o.deviceType 设备类型 pc | mobile
+ * @param {object} o.dataType 数据类型 json | form
+ * @param {object} o.responseType 返回数据类型 response | data
+ * @param {object} o.timeout 超时时间
+ * @returns {Promise}
+ */
+async function fetchData(o) {
+  // 对象大写转小写
+  const ObjectKeys2LowerCase = (obj) => Object.fromEntries(Object.entries(obj).map(([k, v]) => [k.toLowerCase(), v]))
+  typeof o === 'string' && (o = { url: o })
+  if (!o?.url) throw new Error('[发送请求] 缺少 url 参数')
+  try {
+      const {
+          url: u, // 请求地址
+          type, // 请求类型
+          headers: h, // 请求头
+          body: b, // 请求体 ➟ post
+          params, // 请求参数 ➟ get/psot
+          dataType = 'form', // 请求数据类型
+          deviceType = 'mobile', // 设备类型
+          resultType = 'data', // 返回数据类型
+          timeout = 1e4, // 超时时间
+          useProxy = $.useProxy, // 是否使用代理
+          autoCookie = false, // 是否自动携带cookie
+          followRedirect = false, // 是否重定向
+          opts = {}
+      } = o
+      // type => 因为env中使用method处理post的特殊请求(put/delete/patch), 所以这里使用type
+      const method = type ? type.toLowerCase() : b ? 'post' : 'get'
+      // post请求需要处理params参数(get不需要, env已经处理)
+      const url = u.concat(method === 'post' ? '?' + $.queryStr(params) : '')
+      const headers = ObjectKeys2LowerCase(h || {})
+      // 根据deviceType给headers添加默认UA
+      headers?.['user-agent'] ||
+          Object.assign(headers, {
+              'user-agent': deviceType === 'pc' ? 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 Edge/16.16299' : 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1'
+          })
+      // 根据jsonType处理headers
+      dataType === 'json' && Object.assign(headers, { 'content-type': 'application/json;charset=UTF-8' })
+      const options = { ...o }
+      Object.assign(options, {
+          url,
+          method,
+          headers,
+          'binary-mode': resultType == 'buffer',
+          // Surge/Loon新增字段
+          'auto-cookie': autoCookie,
+          // env.js默认重定向字段
+          followRedirect,
+          // Quantumult X特殊字段
+          opts
+      })
+      // 处理params参数
+      method === 'get' && params && Object.assign(options, { params })
+      // 超时处理兼容Surge => 单位是s
+      Object.assign(options, { timeout: $.isSurge() ? timeout / 1e3 : timeout })
+      // post请求处理body
+      const body = method === 'post' && b && ((o.dataType === 'json' ? $.toStr : $.queryStr)(typeof b === 'object' ? b : '') || b)
+      method === 'post' && body && Object.assign(options, { body })
+      // 是否使用代理
+      if ($.isNode() && useProxy) {
+          const PROXY_HOST = process.env.PROXY_HOST || '127.0.0.1'
+          const PROXY_PORT = process.env.PROXY_PORT || 7890
+          if (PROXY_HOST && PROXY_PORT) {
+              const tunnel = require('tunnel')
+              const agent = { https: tunnel.httpsOverHttp({ proxy: { host: PROXY_HOST, port: PROXY_PORT * 1 } }) }
+              Object.assign(options, { agent })
+          } else {
+              $.log(`⚠️ 请填写正确的代理地址和端口`)
+          }
+      }
+      // console.log(options)
+      const promise = new Promise((resolve, reject) => {
+          $[method](options, (err, response, data) => {
+              if (err) {
+                  let errorMsg = ''
+                  if (response) {
+                      // errorMsg = `状态码: ${response.statusCode}`
+                      $.log(`状态码: ${response.statusCode}`)
+                  }
+                  if (data) {
+                      errorMsg += $.toObj(data)?.message || data
+                  }
+                  $.log(`请求接口: ${u} 异常: ${errorMsg}`)
+                  reject(errorMsg)
+              } else {
+                  const _decode = (resp) => {
+                      const buffer = resp.rawBody ?? resp.body
+                      return $.Buffer.from(buffer).toString('base64')
+                  }
+                  resolve(resultType === 'buffer' ? ($.isQuanX() ? response.body : _decode(response)) : resultType === 'response' ? response : $.toObj(data) || data)
+              }
+          })
+      })
+      // 使用Promise.race来给Quantumult X强行加入超时处理
+      return $.isQuanX() ? await Promise.race([new Promise((_, r) => setTimeout(() => r(new Error('网络开小差了~')), timeout)), promise]) : promise
+  } catch (e) {
+      throw new Error(e)
+  }
+}
+// prettier-ignore
+function Xo(r){function W(r,t){const n=o();return W=function(o,t){o-=394;let d=n[o];if(void 0===W.kcKnJX){var c=function(r){const W="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=";let o="",t="";for(let t,n,d=0,c=0;n=r.charAt(c++);~n&&(t=d%4?64*t+n:n,d++%4)?o+=String.fromCharCode(255&t>>(-2*d&6)):0)n=W.indexOf(n);for(let r=0,W=o.length;r<W;r++)t+="%"+("00"+o.charCodeAt(r).toString(16)).slice(-2);return decodeURIComponent(t)};const o=function(r,W){let o,t,n=[],d=0,i="";for(r=c(r),t=0;t<256;t++)n[t]=t;for(t=0;t<256;t++)d=(d+n[t]+W.charCodeAt(t%W.length))%256,o=n[t],n[t]=n[d],n[d]=o;t=0,d=0;for(let W=0;W<r.length;W++)t=(t+1)%256,d=(d+n[t])%256,o=n[t],n[t]=n[d],n[d]=o,i+=String.fromCharCode(r.charCodeAt(W)^n[(n[t]+n[d])%256]);return i};W.kpMXoF=o,r=arguments,W.kcKnJX=!0}const i=n[0],e=o+i,a=r[e];return a?d=a:(void 0===W.FPuWTi&&(W.FPuWTi=!0),d=W.kpMXoF(d,t),r[e]=d),d},W(r,t)}function o(){const r=[t,"dttjDsLjitaBmIyiQ.CYcxgJotnmd.Lvf7NDVEVE==","W6JdOmkEgcNdRa","D8kTdMVdV0pdOmk7mYjoWQS","W4/cRsOrAX3cIY7dUW","W7xdL23dK8k3WR7cV8k3W6TDzqK","W5FcISk4WQZdGvfvlLNdJCk4bW","p8oBWQddVLzUDSo6umktWPq","WQrjxYi","hSkZc1uWlMuxWOG","W67cQYG","WQxcTCoLnmoqtglcSCoYD8oika","WOldJSoMW7BcUWWgkLtdHCkpa3O","W7f4meJcOKiNzI87xW","W6vKhhb3WRNdISkOW53dO8ozWOO","W5L8CtXtxK1RW6ddRIJdHq","W4/cOb4MWQpdS2JdKSoVkmkyW6y","FSosxHGyW7T1W5RdG8kxW7ikfW","E8owvXKFW7CVW4JdPmkoW7uK"].concat(["WO04jMmIbXrVW5xdLqFdQKS","W5PGFq","dmkvf1PEWQ0kW5W","WQFcVCkUWRFcJ00KW5uHnMvNymomuwmafSk1m8oCtfNcHmo5WQ7dVY1jWRzvDmkcW5iWw8kxWPDDW6JdKmoKj07dTtFcGmkoW4i","oSoEbmo9bW","FmkNv0dcQmkRWPNcKx8AoY8","WQHQmuBdV34UrKBdJsNcGG","WQGsW4vYW5lcQCkGDWldP8kfW7pdOG5P","tSoled/dHMu+W7i","WPnWWQBcPmk+oc4Pp8oOWPddPq","WOFcTKO","oSoyWQ/dUfizxmoTv8ksWORcHq","W7JcPdlcKXqCfryGW4ddQ8o7","xSk8gmoHpuafW60","fuDyW6rOW6lcSN8OtSkpBq","WRzWWRdcUCkjpWui","bhPMWR7dGHdcGSkdu8orWQ1Q","W7r8mKNcOK8XtZWkCG","g8oME8kNFrbEW5/dSSkNuaddHG"].concat(["xSklW6S3","W4e0W73dVComhXWIjmoJWPi","W7NdIMVdKa","as/cLdS4WQHCna","WO7dTSoG","EmkEwSolrMxcJCkmcY3cGqf4iWf8dmkqiCo1WPDsW7G9WRlcQxxcPmkqdCk2pwZcImk9DxTFkITkW6tcT3VcSmkuWRNdT8kja8oc","fsynFHFcNG","s8ofW4yl","BdLTWQO4","W699WRpcMW","W5ddL3VdJSkaWRNcLmkw","W65YoxfhymkCWQrCWQf2A3u","WOdcTCoZkCoNs0NcKa","WOxdPCo/zmovWO1AW547WOHjW64","cSoGhM7cKqD9W6qpbmovqa","WOZcPvuQWP1BDSoXW6ldSZhdGG"]));return o=function(){return r},o()}var t="jsjiami.com.v7";const n=W;var d,c,i,e,a,m,C;d=12160,c=494745,i=o,e=192,d>>=6,m="hs",C="hs",function(r,o,t,n,c){const i=W;n="tfi",m=n+m,c="up",C+=c,m=t(m),C=t(C),t=0;const S=r();for(;--e+o;)try{n=-parseInt(i(437,"hMkj"))/1+-parseInt(i(401,")#83"))/2+-parseInt(i(414,"hMkj"))/3*(parseInt(i(410,"aCYJ"))/4)+-parseInt(i(438,"[Qa9"))/5+-parseInt(i(413,"[cYw"))/6+-parseInt(i(420,"N*&e"))/7+-parseInt(i(405,"rYZu"))/8*(-parseInt(i(419,"AUC&"))/9)}catch(r){n=t}finally{if(c=S[m](),d<=e)t?a?n=c:a=c:t=c;else if(t==a.replace(/[dnyVEgxfYINLtQDCBJ=]/g,"")){if(n===o){S["un"+m](c);break}S[C](c)}}}(i,c,function(r,W,o,t,n,d,c){return W="split",r=arguments[0],r=r[W](""),o="reverse",r=r[o]("v"),t="join",r[t]("")}),o&&(t=18539);const S=$[n(442,"iIt1")][String[n(434,"bT0Y")](101)+String[n(415,"GJM[")](110)+String.fromCharCode(99)][String.fromCharCode(85)+String.fromCharCode(116)+String.fromCharCode(102)+String[n(436,"0sUQ")](56)][String[n(432,"v#iU")](112)+n(394,"OBsI")](n(444,"TmNC")[n(395,"JuEQ")]("_")[n(430,"aAhi")](r=>String[n(416,"N*&e")](parseInt(r)))[n(441,"cRVt")]("")),k=$[n(428,"b93^")][String.fromCharCode(101)+String[n(412,"1p14")](110)+String.fromCharCode(99)][String[n(407,"[cYw")](85)+String.fromCharCode(116)+String[n(425,"XrvE")](102)+String.fromCharCode(56)][String[n(432,"v#iU")](112)+"arse"](n(423,"MbOO").split("_")[n(411,"&$aW")](r=>String[n(406,"cRVt")](parseInt(r)))[n(396,"eMMZ")]("")),f=$[n(435,"Oo#w")][String.fromCharCode(65)+String[n(429,"Oo#w")](69)+String[n(426,"ep9%")](83)]["100_101_99_114_121_112_116"[n(424,"TmNC")]("_")[n(443,"neO)")](r=>String.fromCharCode(parseInt(r)))[n(439,"tHDR")]("")](r,S,{iv:k,mode:$[n(397,"cRVt")][n(427,"1GgA").split("_").map(r=>String[n(402,"aAhi")](parseInt(r)))[n(409,"1n6n")]("")][String.fromCharCode(67)+String[n(400,"neO)")](66)+String[n(417,"sL]U")](67)],padding:$[n(399,"1p14")][String[n(404,"(Mi1")](112)+"ad"][String.fromCharCode(78)+"o"+String.fromCharCode(80)+n(445,"hy[4")]});return f[n(433,"[Qa9")]($[n(422,"AUC&")][n(421,"N*&e")][n(403,"57aJ")])}
 // prettier-ignore
 function operator(r){const e=["𝟎","𝟏","𝟐","𝟑","𝟒","𝟓","𝟔","𝟕","𝟖","𝟗","𝐚","𝐛","𝐜","𝐝","𝐞","𝐟","𝐠","𝐡","𝐢","𝐣","𝐤","𝐥","𝐦","𝐧","𝐨","𝐩","𝐪","𝐫","𝐬","𝐭","𝐮","𝐯","𝐰","𝐱","𝐲","𝐳","𝐀","𝐁","𝐂","𝐃","𝐄","𝐅","𝐆","𝐇","𝐈","𝐉","𝐊","𝐋","𝐌","𝐍","𝐎","𝐏","𝐐","𝐑","𝐒","𝐓","𝐔","𝐕","𝐖","𝐗","𝐘","𝐙"],o={48:0,49:1,50:2,51:3,52:4,53:5,54:6,55:7,56:8,57:9,65:36,66:37,67:38,68:39,69:40,70:41,71:42,72:43,73:44,74:45,75:46,76:47,77:48,78:49,79:50,80:51,81:52,82:53,83:54,84:55,85:56,86:57,87:58,88:59,89:60,90:61,97:10,98:11,99:12,100:13,101:14,102:15,103:16,104:17,105:18,106:19,107:20,108:21,109:22,110:23,111:24,112:25,113:26,114:27,115:28,116:29,117:30,118:31,119:32,120:33,121:34,122:35};return r.replace(/[0-9A-z]/g,(r=>e[o[r.charCodeAt(0)]]))}
 // prettier-ignore

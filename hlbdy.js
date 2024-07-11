@@ -1,3 +1,25 @@
+function render(imageDataArray, title) {
+    const imageTags = imageDataArray.map(imageData => `<li><img src="data:image/jpeg;base64,${imageData}" alt="Displayed Image"></li>`).join('');
+    return `<!DOCTYPE html><html lang="zh-CN">
+    <head>
+    
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title}</title>
+    <style>
+      * { margin: 0; padding: 0; }
+      h1 { padding: 10px; font-size: 1em; text-align: center; }
+      ul { display: flex; flex-wrap: wrap; justify-content: center; }
+      li { list-style: none; width: 50%; box-sizing: border-box; padding: 10px; }
+      img { width: 100%; height: auto; }
+    </style>
+    
+    </head>
+    <body>
+    <h1>${title}</h1>
+    <ul>${imageTags}</ul>
+    </body>
+    </html>`;
+  }
 
 const $ = new Env('黑料不打烊', {
     scriptname: 'HLBDY',
@@ -20,7 +42,7 @@ const $ = new Env('黑料不打烊', {
         网红乱象: 1,
         // 反差女友: 4,
         原创社区: 13,
-        // 校园春宫: 2,
+        校园春宫: 2,
         独家爆料: 9
         // 官员干部:17,
         // 性爱课堂: 12,
@@ -69,6 +91,9 @@ class HL {
     // 根据菜单获取地址
     getURLbyKey() {
         const _id = $.MENU[USER_SELECT]
+        // const _id = 2
+        console.log(_id)
+        console.log(this.baseURL)
         return _id ? `${this.baseURL}category/${_id}.html` : this.baseURL
     }
     // 获取每日TOP10列表
@@ -190,6 +215,7 @@ class HL {
             try {
                 const base64 = await fetchData({ url: item.fakeThumb, resultType: 'buffer' })
                 const rs = Xo(base64)
+                // console.log(rs)
                 delete this.list[i]['fakeThumb']
                 Object.assign(this.list[i], { thumb: rs })
             } catch (e) {
@@ -198,10 +224,11 @@ class HL {
         })
         await Promise.all(tasks)
         $.debug('添加完真实图片后的列表:', JSON.stringify(this.list, null, 2))
+        // console.log(this.list[0]['thumb'])
     }
 };
 
-(async () => {
+const main = async () => {
     // await showNotice()
     await loadRemoteScriptByCache('https://cdn.jsdelivr.net/gh/Yuheng0101/X@main/Utils/Buffer.min.js', 'loadBuffer', 'Buffer')
     await loadRemoteScriptByCache('https://cdn.jsdelivr.net/gh/Yuheng0101/X@main/Utils/cheerio.js', 'createCheerio', 'cheerio')
@@ -209,13 +236,23 @@ class HL {
     const hl = new HL()
     await hl.getLatestIndex()
     await hl.getListByKey()
+
     if (USER_SELECT == '每日TOP10') {
         await hl.getTop10()
         if (!hl.list.length) return
-    } else {
+    } 
+    else {
         await hl.getDetail()
     }
     await hl.getRealImage()
+    const htmlArray = [];
+    for (let i = 0; i < hl.list.length; i++) {
+        // 获取当前元素的 'thumb' 属性
+        const thumbUrl = hl.list[i]['thumb'];
+        htmlArray.push(thumbUrl);}
+    // console.log(htmlArray)
+    const html = render(htmlArray, '黑料');
+
     if (hl?.list?.length) {
         /**
          * 三种通知方式
@@ -244,9 +281,28 @@ class HL {
     } else {
         $.error(`[${USER_SELECT}] 近3日没有更新记录~`)
     }
-})()
-    .catch((error) => $.logErr(error))
-    .finally(() => $.done({ ok: 1 }))
+
+    $.setdata(html, "meitu_html");
+    $.msg( '获取成功');
+  
+};
+
+
+(async () => {
+    const body = $.getdata("meitu_html");
+    !body && (await main());
+
+    const response = {
+    headers: { "content-type": "text/html" },
+    status: $.isQuanX() ? "HTTP/1.1 200 OK" : 200,
+    body,
+    };
+    $.done($.isQuanX() ? response : { response });
+})();
+
+
+
+
 // ------------
 // 免责声明
 
@@ -287,7 +343,7 @@ function loadRemoteScriptByCache(scriptUrl, functionName, scriptName) {
 }
 // 消息通知
 async function showMsg(n, o, i, t) {
-    if ($.isShadowrocket()) {
+    if ($.isNode()) {
         const notify = $.isNode() ? require($.notifyPath) : ''
         const content = [i]
         const openUrl = t?.['open-url'] || t?.url || t?.mediaUrl || t?.$open
