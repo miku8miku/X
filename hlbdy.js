@@ -293,9 +293,12 @@ const main = async () => {
 };
 
 if (typeof $request === "undefined") {
+    console.log("测试1");
     main().finally(() => $.done({}));
   } 
-  else {  (async () => {
+  else { 
+    console.log("测试2");
+     (async () => {
     const body = $.getdata("meitu_html");
     !body && (await main());
     const response = {
