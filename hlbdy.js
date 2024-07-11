@@ -228,8 +228,8 @@ class HL {
     }
 };
 
-const main = async () => {
 
+const main = async () => {
     try{
     // await showNotice()
     await loadRemoteScriptByCache('https://cdn.jsdelivr.net/gh/Yuheng0101/X@main/Utils/Buffer.min.js', 'loadBuffer', 'Buffer')
@@ -292,11 +292,12 @@ const main = async () => {
   
 };
 
-
-(async () => {
+if (typeof $request === "undefined") {
+    main().finally(() => $.done({}));
+  } 
+  else {  (async () => {
     const body = $.getdata("meitu_html");
     !body && (await main());
-
     const response = {
     headers: { "content-type": "text/html" },
     status: $.isQuanX() ? "HTTP/1.1 200 OK" : 200,
@@ -304,7 +305,7 @@ const main = async () => {
     };
     $.done($.isQuanX() ? response : { response });
 })();
-
+}
 
 
 
