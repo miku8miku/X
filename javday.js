@@ -1,46 +1,3 @@
-/******************************************
- * @name 𝐉𝐀𝐕𝐃𝐚𝐲每日推荐
- * @channel https://t.me/yqc_123/
- * @feedback https://t.me/yqc_777/
- * @update 20240411
- * @version 1.0.2
- ******************************************
-脚本声明:
-1. 本脚本仅用于学习研究，禁止用于商业用途
-2. 本脚本不保证准确性、可靠性、完整性和及时性
-3. 任何个人或组织均可无需经过通知而自由使用
-4. 作者对任何脚本问题概不负责，包括由此产生的任何损失
-5. 如果任何单位或个人认为该脚本可能涉嫌侵犯其权利，应及时通知并提供身份证明、所有权证明，我将在收到认证文件确认后删除
-6. 请勿将本脚本用于商业用途，由此引起的问题与作者无关
-7. 本脚本及其更新版权归作者所有
-******************************************
-BoxJs订阅地址:
- - https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/boxjs.json
-
-******************************************
-QuantumultX配置:
-
-[task_local]
-0 22 * * * https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/javday.js, tag=𝐉𝐀𝐕𝐃𝐚𝐲每日推荐, img-url=https://raw.githubusercontent.com/Yuheng0101/X/main/Assets/javday.png, enabled=true
-******************************************
-Loon配置:
-
-[Script]
-cron "0 22 * * *" script-path=https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/javday.js, timeout=10, tag=𝐉𝐀𝐕𝐃𝐚𝐲每日推荐, img-url=https://raw.githubusercontent.com/Yuheng0101/X/main/Assets/javday.png
-******************************************
-Surge配置:
-
-[Script]
-𝐉𝐀𝐕𝐃𝐚𝐲每日推荐 = type=cron,cronexp=0 22 * * *,wake-system=1,script-path=https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/javday.js,timeout=60
-******************************************
-青龙配置:
-# 是否开启调试模式
-export JAVDAY_DEBUG = 'false'
-# 是否开启代理（国内机选配） => 用于拉取github依赖
-export JAVDAY_USE_PROXY = 'false'
-# 类型选择
-export JAVDAY_TYPE = '人氣系列'
-******************************************/
 const $ = new Env('𝐉𝐀𝐕𝐃𝐚𝐲', {
     logLevelPrefixs: {
         debug: '==============🛠️调试输出==============\n',
@@ -60,7 +17,7 @@ const MAPs = {
 // -------------------------------------
 // 数据定义区
 // const notify = $.isNode() ? require('../../utils/sendNotify') : ''
-const notify = $.isNode() ? require('../../sendNotify') : ''
+const notify = $.isNode() ? require('../sendNotify') : ''
 const baseURL = 'https://javday.tv'
 // -------------------------------------
 // 开发者模式
@@ -157,7 +114,7 @@ class JAVDay {
     }
 }
 ;(async () => {
-    await showNotice()
+    // await showNotice()
     await loadRemoteScriptByCache('https://cdn.jsdelivr.net/gh/Yuheng0101/X@main/Utils/cheerio.js', 'createCheerio', 'cheerio')
     const jav = new JAVDay()
     await jav.getList()
@@ -182,18 +139,6 @@ class JAVDay {
     })
 })().finally(() => $.done({ ok: 1 }))
 // -------------------------------------
-// 免责声明
-async function showNotice() {
-    $.log('==============📣免责声明📣==============')
-    $.log('1. 本脚本仅用于学习研究，禁止用于商业用途')
-    $.log('2. 本脚本不保证准确性、可靠性、完整性和及时性')
-    $.log('3. 任何个人或组织均可无需经过通知而自由使用')
-    $.log('4. 作者对任何脚本问题概不负责，包括由此产生的任何损失')
-    $.log('5. 如果任何单位或个人认为该脚本可能涉嫌侵犯其权利，应及时通知并提供身份证明、所有权证明，我将在收到认证文件确认后删除')
-    $.log('6. 请勿将本脚本用于商业用途，由此引起的问题与作者无关')
-    $.log('7. 本脚本及其更新版权归作者所有')
-    $.log('')
-}
 /**
  * 远程脚本加载
  * @param {String} scriptUrl 远程链接
@@ -227,7 +172,7 @@ function loadRemoteScriptByCache(scriptUrl, functionName, scriptName) {
 }
 // 消息通知
 async function showMsg(n, o, i, t) {
-    if ($.isNode()) {
+    if ($.isShadowrocket()) {
         const content = [i]
         t?.['open-url'] && content.push(`🔗打开链接: ${t['open-url']}`)
         t?.['media-url'] && content.push(`🎬媒体链接: ${t['media-url']}`)
@@ -325,7 +270,7 @@ async function fetchData(o) {
         })
         // 处理params参数
         method === 'get' && params && Object.assign(options, { params })
-        // 超时处理兼容Surge => 单位是s
+        // 超时处理兼容Surge => 单
         Object.assign(options, { timeout: $.isSurge() ? timeout / 1e3 : timeout })
         // post请求处理body
         const body = method === 'post' && b && ((o.dataType === 'json' ? $.toStr : $.queryStr)(typeof b === 'object' ? b : '') || b)
