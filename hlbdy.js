@@ -43,13 +43,13 @@ const $ = new Env('黑料不打烊', {
         // 反差女友: 4,
         原创社区: 13,
         校园春宫: 2,
-        独家爆料: 9
-        // 官员干部:17,
-        // 性爱课堂: 12,
-        // 中外奇闻: 3,
-        // 禁播影视: 14,
-        // 社会新闻: 15,
-        // 明星丑闻: 16
+        独家爆料: 9,
+        官员干部:17,
+        性爱课堂: 12,
+        中外奇闻: 3,
+        禁播影视: 14,
+        社会新闻: 15,
+        明星丑闻: 16
     }
 })
 // ------------
@@ -69,6 +69,7 @@ $.debug(`🔰 选择: ${USER_SELECT}`)
 // 通知类型 => 0: 组合通知 1:单独通知 DEFAULT: 0
 const NOTIFY_TYPE = Number($.isNode() ? process.env[`${$.scriptname}_NOTIFY_TYPE`] : $.getdata(`${$.scriptname.toLowerCase()}_notify_type`)) || 0
 $.debug(`🔰 通知: ${NOTIFY_TYPE == 1 ? '单独通知' : '组合通知'}`)
+const _id = $.MENU[USER_SELECT]
 class HL {
     // 获取最新地址
     async getLatestIndex() {
@@ -90,9 +91,9 @@ class HL {
     }
     // 根据菜单获取地址
     getURLbyKey() {
-        const _id = $.MENU[USER_SELECT]
+        // const _id = $.MENU[USER_SELECT]
         // const _id = 2
-        console.log(_id)
+        // console.log(_id)
         console.log(this.baseURL)
         return _id ? `${this.baseURL}category/${_id}.html` : this.baseURL
     }
@@ -252,7 +253,7 @@ const main = async () => {
         const thumbUrl = hl.list[i]['thumb'];
         htmlArray.push(thumbUrl);}
     // console.log(htmlArray)
-    const html = render(htmlArray, '黑料');
+    const html = render(htmlArray, `${hl.baseURL}category/${_id}.html`);
 
     // if (hl?.list?.length) {
     //     /**
@@ -285,7 +286,6 @@ const main = async () => {
 
     $.setdata(html, "meitu_html");
     $.msg( '黑料获取成功');
-
     } catch (e) {
     $.logErr(e);
   }
