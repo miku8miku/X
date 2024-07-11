@@ -159,7 +159,7 @@
       "id": "kb.hlbdy",
       "name": "最新黑料",
       "descs_html": [
-        "<a target='_blank' href='https://raw.githubusercontent.com/miku8miku/X/main/hlbdy.js'>111</a>"
+        "<a target='_blank' href='https://raw.githubusercontent.com/miku8miku/X/main/hlbdy.js'>脚本地址</a>"
       ],
       "keys": [
         "hlbdy_notify_with_media",
@@ -250,7 +250,7 @@
           ]
         }
       ],
-      "author": "@yuheng",
+      "author": "@KB",
       "repo": "https://github.com/miku8miku/X",
       "icons": [
         "https://raw.githubusercontent.com/Toperlock/Quantumult/main/icon/heiliao.png",
