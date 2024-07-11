@@ -1,3 +1,4 @@
+
 const $ = new Env('黑料不打烊', {
     scriptname: 'HLBDY',
     baseURL: 'https://155.fun',
@@ -7,7 +8,7 @@ const $ = new Env('黑料不打烊', {
         warn: '===⚠️𝐖𝐀𝐑𝐍𝐈𝐍𝐆===\n',
         error: '===❌错误提示===\n'
     },
-    notifyPath: '../../utils/sendNotify', // NodeJS环境通知依赖
+    notifyPath: '../sendNotify', // NodeJS环境通知依赖  const notify = $.isNode() ? require('../sendNotify') : ''
     message: [], // 存储通知消息
     MENU: {
         最新黑料: '',
@@ -198,9 +199,10 @@ class HL {
         await Promise.all(tasks)
         $.debug('添加完真实图片后的列表:', JSON.stringify(this.list, null, 2))
     }
-}
-;(async () => {
-    await showNotice()
+};
+
+(async () => {
+    // await showNotice()
     await loadRemoteScriptByCache('https://cdn.jsdelivr.net/gh/Yuheng0101/X@main/Utils/Buffer.min.js', 'loadBuffer', 'Buffer')
     await loadRemoteScriptByCache('https://cdn.jsdelivr.net/gh/Yuheng0101/X@main/Utils/cheerio.js', 'createCheerio', 'cheerio')
     await loadRemoteScriptByCache('https://cdn.jsdelivr.net/gh/Yuheng0101/X@main/Utils/CryptoJS.min.js', 'createCryptoJS', 'CryptoJS')
@@ -247,17 +249,7 @@ class HL {
     .finally(() => $.done({ ok: 1 }))
 // ------------
 // 免责声明
-async function showNotice() {
-    $.log('==============📣免责声明📣==============')
-    $.log('1. 本脚本仅用于学习研究，禁止用于商业用途')
-    $.log('2. 本脚本不保证准确性、可靠性、完整性和及时性')
-    $.log('3. 任何个人或组织均可无需经过通知而自由使用')
-    $.log('4. 作者对任何脚本问题概不负责，包括由此产生的任何损失')
-    $.log('5. 如果任何单位或个人认为该脚本可能涉嫌侵犯其权利，应及时通知并提供身份证明、所有权证明，我将在收到认证文件确认后删除')
-    $.log('6. 请勿将本脚本用于商业用途，由此引起的问题与作者无关')
-    $.log('7. 本脚本及其更新版权归作者所有')
-    $.log('')
-}
+
 /**
  * 远程脚本加载
  * @param {String} scriptUrl 远程链接
@@ -295,19 +287,19 @@ function loadRemoteScriptByCache(scriptUrl, functionName, scriptName) {
 }
 // 消息通知
 async function showMsg(n, o, i, t) {
-    if ($.isNode()) {
+    if ($.isShadowrocket()) {
         const notify = $.isNode() ? require($.notifyPath) : ''
         const content = [i]
         const openUrl = t?.['open-url'] || t?.url || t?.mediaUrl || t?.$open
         const mediaUrl = t?.['media-url'] || t?.mediaUrl || t?.$media
         openUrl && content.push(`🔗打开链接: ${openUrl}`)
         mediaUrl && content.push(`🎬媒体链接: ${mediaUrl}`)
-        $.log('==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3==============', n, o, content.join('\n'))
-        try {
-            await notify.sendNotify(`${n}\n${o}`, content.join('\n'))
-        } catch (e) {
-            $.warn('没有找到sendNotify.js文件 不发送通知')
-        }
+        // $.log('==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3==============', n, o, content.join('\n'))
+        // try {
+        //     await notify.sendNotify(`${n}\n${o}`, content.join('\n'))
+        // } catch (e) {
+        //     $.warn('没有找到sendNotify.js文件 不发送通知')
+        // }
     } else {
         !$.notifyWithMedia && ['media-url', 'mediaUrl', '$media'].map((key) => delete t[key])
         $.msg(n, o, i, t)

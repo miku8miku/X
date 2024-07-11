@@ -173,19 +173,9 @@ function loadRemoteScriptByCache(scriptUrl, functionName, scriptName) {
 // 消息通知
 async function showMsg(n, o, i, t) {
     if ($.isShadowrocket()) {
-        // const content = [i]
-        // t?.['open-url'] && content.push(`🔗打开链接: ${t['open-url']}`)
-        // t?.['media-url'] && content.push(`🎬媒体链接: ${t['media-url']}`)
-        if (typeof t === 'object') {
-            if (t?.['text']) {
-                Object.assign(t, { action: 'clipboard', text: t['text'] })
-            } else if (t?.['open-url']) {
-                Object.assign(t, { action: 'open-url', url: t['open-url'] })
-            }
-            $notification.post(n, o, i, t)
-        } else {
-            $.msg(n, o, i, t)
-        }
+        const content = [i]
+        t?.['open-url'] && content.push(`🔗打开链接: ${t['open-url']}`)
+        t?.['media-url'] && content.push(`🎬媒体链接: ${t['media-url']}`)
     }
     // 新版surge
     else if ($.isSurge()) {
