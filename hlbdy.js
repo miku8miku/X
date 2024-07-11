@@ -284,7 +284,7 @@ const main = async () => {
     // }
 
     $.setdata(html, "meitu_html");
-    $.msg( '获取成功');
+    $.msg( '黑料获取成功');
 
     } catch (e) {
     $.logErr(e);
