@@ -229,18 +229,19 @@ class HL {
 };
 
 const main = async () => {
+
+    try{
     // await showNotice()
     await loadRemoteScriptByCache('https://cdn.jsdelivr.net/gh/Yuheng0101/X@main/Utils/Buffer.min.js', 'loadBuffer', 'Buffer')
     await loadRemoteScriptByCache('https://cdn.jsdelivr.net/gh/Yuheng0101/X@main/Utils/cheerio.js', 'createCheerio', 'cheerio')
     await loadRemoteScriptByCache('https://cdn.jsdelivr.net/gh/Yuheng0101/X@main/Utils/CryptoJS.min.js', 'createCryptoJS', 'CryptoJS')
+
     const hl = new HL()
     await hl.getLatestIndex()
     await hl.getListByKey()
-
     if (USER_SELECT == '每日TOP10') {
         await hl.getTop10()
-        if (!hl.list.length) return
-    } 
+        if (!hl.list.length) return} 
     else {
         await hl.getDetail()
     }
@@ -253,37 +254,41 @@ const main = async () => {
     // console.log(htmlArray)
     const html = render(htmlArray, '黑料');
 
-    if (hl?.list?.length) {
-        /**
-         * 三种通知方式
-         * 1. 组合通知 => 没有媒体
-         * 2. 单独通知 => 有媒体(Surge 有媒体[只有Surge支持base64媒体])
-         * 3. 单独通知 => 无媒体
-         */
-        for (let i = 0; i < hl.list.length; i++) {
-            const { title, date = '', link, thumb, status = '' } = hl.list[i]
-            const $media = $.isSurge() ? thumb : ''
-            const $open = /^http/.test(link) ? link : `${hl.baseURL}${link}`
-            let content = ``
-            status && (content += `[${status}]`)
-            title && (content += `${title}`)
-            date && (content += `  ${date}`)
-            if (NOTIFY_TYPE == 0) {
-                const operator = (t) => t.replace(/[0-9A-z]/g, (match) => ['𝟎', '𝟏', '𝟐', '𝟑', '𝟒', '𝟓', '𝟔', '𝟕', '𝟖', '𝟗']?.[match] || match)
-                $.message.push(`【${operator(i + 1 + '')}】${content}`)
-            } else {
-                await showMsg($.name, USER_SELECT, content, { $media, $open })
-            }
-        }
-        if (NOTIFY_TYPE == 0) {
-            await showMsg($.name, USER_SELECT, $.message.join('\n').replace(/\n$/, ''), { $open: $.MENU[USER_SELECT] ? `${hl.baseURL}category/${$.MENU[USER_SELECT]}.html` : hl.baseURL })
-        }
-    } else {
-        $.error(`[${USER_SELECT}] 近3日没有更新记录~`)
-    }
+    // if (hl?.list?.length) {
+    //     /**
+    //      * 三种通知方式
+    //      * 1. 组合通知 => 没有媒体
+    //      * 2. 单独通知 => 有媒体(Surge 有媒体[只有Surge支持base64媒体])
+    //      * 3. 单独通知 => 无媒体
+    //      */
+    //     for (let i = 0; i < hl.list.length; i++) {
+    //         const { title, date = '', link, thumb, status = '' } = hl.list[i]
+    //         const $media = $.isSurge() ? thumb : ''
+    //         const $open = /^http/.test(link) ? link : `${hl.baseURL}${link}`
+    //         let content = ``
+    //         status && (content += `[${status}]`)
+    //         title && (content += `${title}`)
+    //         date && (content += `  ${date}`)
+    //         if (NOTIFY_TYPE == 0) {
+    //             const operator = (t) => t.replace(/[0-9A-z]/g, (match) => ['𝟎', '𝟏', '𝟐', '𝟑', '𝟒', '𝟓', '𝟔', '𝟕', '𝟖', '𝟗']?.[match] || match)
+    //             $.message.push(`【${operator(i + 1 + '')}】${content}`)
+    //         } else {
+    //             await showMsg($.name, USER_SELECT, content, { $media, $open })
+    //         }
+    //     }
+    //     if (NOTIFY_TYPE == 0) {
+    //         await showMsg($.name, USER_SELECT, $.message.join('\n').replace(/\n$/, ''), { $open: $.MENU[USER_SELECT] ? `${hl.baseURL}category/${$.MENU[USER_SELECT]}.html` : hl.baseURL })
+    //     }
+    // } else {
+    //     $.error(`[${USER_SELECT}] 近3日没有更新记录~`)
+    // }
 
     $.setdata(html, "meitu_html");
     $.msg( '获取成功');
+
+    } catch (e) {
+    $.logErr(e);
+  }
   
 };
 
