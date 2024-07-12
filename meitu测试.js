@@ -71,7 +71,7 @@ const main = async () => {
 // main().finally(() => $.done( $.msg('完成')));
 (async () => {
   const body = $.getdata("meitu_html");
-  body && (await main());
+  (await main());
   $.done($.msg('完成'));
 })();
 
