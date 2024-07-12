@@ -45,7 +45,7 @@ const main = async () => {
     if (!SOURCE) throw "未知错误~";
     const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
     const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");
-    const slicedImages = images.slice(0, 15);
+    const slicedImages = images.slice(0, 30);
     //图片数量太多会导致vpn崩溃
     $.msg('更新');
   const imageBase64Array = await Promise.all(slicedImages.map(async (imageUrl) => {
