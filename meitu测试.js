@@ -6,7 +6,7 @@ const GRAPHIC_SOURCE = {
   MMT: 'MMT'
 };
 // 用户选择
-const [SOURCE, CATEGORY] = ($.getdata("meitu_type") ?? "MMT - 丝袜美腿")
+const [SOURCE, CATEGORY] = ($.getdata("meitu_type") ?? "4KHD - 丝袜美腿")
   .split("-")
   .map((it) => it.trim());
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
@@ -49,7 +49,7 @@ const main = async () => {
     const response = await fetchData({ url: imageUrl, resultType: 'buffer',headers:{'Referer': 'https://mm.tvv.tw'}})
     return response
 }));
-  console.log(imageBase64Array);
+  console.log(JSON.stringify(imageBase64Array, null, 2));
     const html = render(imageBase64Array, title);
     $.setdata(html, "meitu_html");
     // $.fs.writeFileSync('output.html', html, 'utf8');
