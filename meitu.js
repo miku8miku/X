@@ -49,13 +49,13 @@ if (typeof $request === "undefined") {
 } else {
   (async () => {
     const body = $.getdata("meitu_html");
-    !body && (await main());
+    body && (await main());
     const response = {
       headers: { "content-type": "text/html" },
       status: $.isQuanX() ? "HTTP/1.1 200 OK" : 200,
       body,
     };
-    $.done($.isQuanX() ? response : { response });
+    $.done('完成');
   })();
 }
 
