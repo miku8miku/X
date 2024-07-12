@@ -110,8 +110,8 @@ const main = async () => {
     return response
 }));
 
-    const filteredImages = imageBase64Array.filter(imageData => imageData !== null);
-    const html = render(filteredImages, title);
+    // const filteredImages = imageBase64Array.filter(imageData => imageData !== null);
+    const html = render(imageBase64Array, title);
 
     // const html = render(images, title);
 
