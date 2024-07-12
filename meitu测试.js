@@ -58,7 +58,6 @@ const main = async () => {
   } catch (e) {
     $.logErr(e);
   }
-  $.done(console.log(3));
 };
 
 /////// =====测试主函数======
@@ -79,7 +78,7 @@ const main = async () => {
 //   })();
 // }
 
-main()
+main().finally(() => $.done({}));
 
 
 // main().catch(console.error);
