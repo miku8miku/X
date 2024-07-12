@@ -52,7 +52,7 @@ const main = async () => {
   // console.log(imageBase64Array);
     const html = render(imageBase64Array, title);
     $.setdata(html, "meitu_html");
-    $.msg('美图获取成功');
+    $.msg('美图获取成功1');
   } catch (e) {
     $.logErr(e);
   }
