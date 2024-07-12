@@ -76,7 +76,8 @@ const main = async () => {
 //   })();
 // }
 
-main().finally(() => $.done({}));
+
+// main().finally(() => $.done({}));
 // main().catch(console.error);
 
 
@@ -334,7 +335,7 @@ async function fetchData(o) {
       // 处理params参数
       method === 'get' && params && Object.assign(options, { params })
       // 超时处理兼容Surge => 单位是s
-      Object.assign(options, { timeout: $.isSurge() ? timeout / 1e3 : timeout })
+      Object.assign(options, { timeout: $.isShadowrocket() ? timeout / 1e3 : timeout })
       // post请求处理body
       const body = method === 'post' && b && ((o.dataType === 'json' ? $.toStr : $.queryStr)(typeof b === 'object' ? b : '') || b)
       method === 'post' && body && Object.assign(options, { body })
@@ -369,12 +370,12 @@ async function fetchData(o) {
                       const buffer = resp.rawBody ?? resp.body
                       return $.Buffer.from(buffer).toString('base64')
                   }
-                  resolve(resultType === 'buffer' ? ($.isQuanX() ? response.body : _decode(response)) : resultType === 'response' ? response : $.toObj(data) || data)
+                  resolve(resultType === 'buffer' ? ($.isShadowrocket() ? response.body : _decode(response)) : resultType === 'response' ? response : $.toObj(data) || data)
               }
           })
       })
       // 使用Promise.race来给Quantumult X强行加入超时处理
-      return $.isQuanX() ? await Promise.race([new Promise((_, r) => setTimeout(() => r(new Error('网络开小差了~')), timeout)), promise]) : promise
+      return $.isShadowrocket() ? await Promise.race([new Promise((_, r) => setTimeout(() => r(new Error('网络开小差了~')), timeout)), promise]) : promise
   } catch (e) {
       throw new Error(e)
   }
