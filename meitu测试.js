@@ -1,8 +1,3 @@
-// const axios = require('axios');
-// const { HttpsProxyAgent } = require('https-proxy-agent');
-// const httpsAgent = new HttpsProxyAgent(`http://127.0.0.1:7890`);
-
-
 const $ = new Env("美图写真测试");
 // 图源
 const GRAPHIC_SOURCE = {
@@ -39,53 +34,6 @@ function render(imageDataArray, title) {
   </html>`;
 }
 
-class Buffer {
-  constructor(input) {
-    if (typeof input === 'string') {
-      this.buffer = new Uint8Array(Buffer.fromBase64(input));
-    } else if (input instanceof ArrayBuffer) {
-      this.buffer = new Uint8Array(input);
-    } else if (input instanceof Uint8Array) {
-      this.buffer = input;
-    } else {
-      throw new TypeError('Invalid input type');
-    }
-  }
-
-  static fromBase64(base64) {
-    const binaryString = atob(base64);
-    const len = binaryString.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-    return bytes;
-  }
-
-  toBase64() {
-    let binary = '';
-    const len = this.buffer.byteLength;
-    for (let i = 0; i < len; i++) {
-      binary += String.fromCharCode(this.buffer[i]);
-    }
-    return btoa(binary);
-  }
-
-  toString(encoding) {
-    if (encoding === 'base64') {
-      return this.toBase64();
-    } else {
-      throw new Error('Unsupported encoding');
-    }
-  }
-}
-
-const arrayBufferToBase64 = (arrayBuffer) => {
-  const buffer = new Buffer(arrayBuffer);
-  return buffer.toString('base64');
-};
-
-
 const main = async () => {
   try {
     // await showNotice();
@@ -96,32 +44,14 @@ const main = async () => {
     if (!SOURCE) throw "未知错误~";
     const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
     const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");
-
-  //   const imageBase64Array = await Promise.all(images.map(async (imageUrl) => {
-  //     const response = await $.http.get(imageUrl,{responseType: 'arraybuffer',headers:{'Referer': 'https://mm.tvv.tw'}});
-  //     base64String = arrayBufferToBase64(response.rawBody);
-  //     return base64String
-  // }));
-
   const imageBase64Array = await Promise.all(images.map(async (imageUrl) => {
     const response = await fetchData({ url: imageUrl, resultType: 'buffer',headers:{'Referer': 'https://mm.tvv.tw'}})
-    // console.log(response)
-    // base64String = arrayBufferToBase64(response.rawBody);
     return response
 }));
-
-    // const filteredImages = imageBase64Array.filter(imageData => imageData !== null);
     const html = render(imageBase64Array, title);
-
-    // const html = render(images, title);
-
     $.setdata(html, "meitu_html");
-    // $.msg(operator(SOURCE), CATEGORY, title, {
-    //   $open: "https://mei.tu",
-    //   $media: thumb,
-    // });
-    $.fs.writeFileSync('output.html', html, 'utf8');
-    console.log('HTML 内容已成功保存到 output.html');
+    // $.fs.writeFileSync('output.html', html, 'utf8');
+    // console.log('HTML 内容已成功保存到 output.html');
     $.msg('美图获取成功');
   } catch (e) {
     $.logErr(e);
@@ -137,7 +67,6 @@ else {
   (async () => {
     const body = $.getdata("meitu_html");
     !body && (await main());
-
     const response = {
       headers: { "content-type": "text/html" },
       status: $.isShadowrocket() ? "HTTP/1.1 200 OK" : 200,
