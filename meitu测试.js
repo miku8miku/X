@@ -77,7 +77,16 @@ const main = async () => {
 // }
 
 
-main().finally(() => $.done({}));
+// main().finally(() => $.done({}));
+(async () => {
+  try {
+    await main(); // 等待 main 执行完成
+  } catch (error) {
+    $.logErr(error); // 捕获并记录错误
+  } finally {
+    $.done({}); // 确保任务结束
+  }
+})();
 // main().catch(console.error);
 
 
