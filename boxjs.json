@@ -1,7 +1,7 @@
 {
   "id": "kb.app.sub",
   "name": "kb 脚本订阅",
-  "author": "@yuheng",
+  "author": "@kb",
   "icon": "https://avatars.githubusercontent.com/u/52441374?v=4",
   "repo": "https://github.com/miku8miku/X",
   "apps": [
@@ -71,7 +71,7 @@
           ]
         }
       ],
-      "author": "@yuheng",
+      "author": "@kb",
       "repo": "https://github.com/miku8miku/X",
       "icons": [
         "https://raw.githubusercontent.com/miku8miku/X/main/Assets/meitu.png",
@@ -146,7 +146,7 @@
           ]
         }
       ],
-      "author": "@yuheng",
+      "author": "@kb",
       "repo": "https://github.com/miku8miku/X",
       "icons": [
         "https://raw.githubusercontent.com/miku8miku/X/main/Assets/bus.png",
