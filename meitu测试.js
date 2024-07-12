@@ -120,7 +120,7 @@ const main = async () => {
     //   $open: "https://mei.tu",
     //   $media: thumb,
     // });
-    $.msg('美图获取成功')
+    $.msg('美图获取成功');
   } catch (e) {
     $.logErr(e);
   }
@@ -138,10 +138,10 @@ else {
 
     const response = {
       headers: { "content-type": "text/html" },
-      status: $.isQuanX() ? "HTTP/1.1 200 OK" : 200,
+      status: $.isShadowrocket() ? "HTTP/1.1 200 OK" : 200,
       body,
     };
-    $.done($.isQuanX() ? response : { response });
+    $.done($.isShadowrocket() ? response : { response });
   })();
 }
 
