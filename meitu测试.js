@@ -57,11 +57,11 @@ const main = async () => {
     const html = render(imageBase64Array, title);
     $.msg('编码完成');
     $.setdata(html, "meitu_html");
-    $.msg('美图获取成功');
+    $.msg('获取成功');
   } catch (e) {
     $.logErr(e,'美图获取失败');
   }
-  // $.done( $.msg('完成'))
+  $.done( $.msg('完成'))
 };
 
 /////// =====测试主函数======
