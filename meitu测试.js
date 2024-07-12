@@ -97,23 +97,19 @@ const main = async () => {
     if (!SOURCE) throw "未知错误~";
     const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
     const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");
-    // console.log(images);
 
-    
-    // const imageBase64Array = await Promise.all(images.map(async (imageUrl) => {
-    //     const response = await $.http.get(imageUrl,{responseType: 'arraybuffer',headers:{'Referer': 'https://mm.tvv.tw'}});
-    //     // console.log(response.body);
-    //     return Buffer.from(response.rawBody, 'binary').toString('base64');
-    // }));
+  //   const imageBase64Array = await Promise.all(images.map(async (imageUrl) => {
+  //     const response = await $.http.get(imageUrl,{responseType: 'arraybuffer',headers:{'Referer': 'https://mm.tvv.tw'}});
+  //     base64String = arrayBufferToBase64(response.rawBody);
+  //     return base64String
+  // }));
 
-    const imageBase64Array = await Promise.all(images.map(async (imageUrl) => {
-      const response = await $.http.get(imageUrl,{responseType: 'arraybuffer',headers:{'Referer': 'https://mm.tvv.tw'}});
-      // const uint8Array = new Uint8Array(response.rawBody);
-      // const stringFromCharCode = String.fromCharCode.apply(null, uint8Array);
-      // const base64String = btoa(stringFromCharCode);
-      base64String = arrayBufferToBase64(response.rawBody);
-      return base64String
-  }));
+  const imageBase64Array = await Promise.all(images.map(async (imageUrl) => {
+    const response = await fetchData({ url: imageUrl, resultType: 'buffer',headers:{'Referer': 'https://mm.tvv.tw'}})
+    // console.log(response)
+    // base64String = arrayBufferToBase64(response.rawBody);
+    return response
+}));
 
     const filteredImages = imageBase64Array.filter(imageData => imageData !== null);
     const html = render(filteredImages, title);
@@ -130,6 +126,7 @@ const main = async () => {
   }
 };
 
+/////// =====测试主函数======
 
 if (typeof $request === "undefined") {
   main().finally(() => $.done({}));
