@@ -44,16 +44,14 @@ const main = async () => {
     if (!SOURCE) throw "未知错误~";
     const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
     const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");
-    const slicedImages = images.slice(0, 1);
+    const slicedImages = images.slice(0, 10);
   const imageBase64Array = await Promise.all(slicedImages.map(async (imageUrl) => {
     const response = await fetchData({ url: imageUrl, resultType: 'buffer',headers:{'Referer': 'https://mm.tvv.tw'}})
     return response
 }));
-  console.log(imageBase64Array);
+  // console.log(imageBase64Array);
     const html = render(imageBase64Array, title);
     $.setdata(html, "meitu_html");
-    // $.fs.writeFileSync('output.html', html, 'utf8');
-    // console.log('HTML 内容已成功保存到 output.html');
     $.msg('美图获取成功');
   } catch (e) {
     $.logErr(e);
@@ -304,7 +302,7 @@ async function fetchData(o) {
           dataType = 'form', // 请求数据类型
           deviceType = 'mobile', // 设备类型
           resultType = 'data', // 返回数据类型
-          timeout = 2e4, // 超时时间
+          timeout = 3e4, // 超时时间
           useProxy = $.useProxy, // 是否使用代理
           autoCookie = false, // 是否自动携带cookie
           followRedirect = false, // 是否重定向
