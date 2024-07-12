@@ -91,54 +91,10 @@
         {
           "id": "meitu_type",
           "name": "推荐类型",
-          "val": "4KHD",
+          "val": "MMT",
           "type": "radios",
-          "desc": "选择图源, 默认'4KHD'",
+          "desc": "选择图源, 默认'MMT'",
           "items": [
-            {
-              "key": "4KHD - popular",
-              "label": "4KHD - popular"
-            },
-            {
-              "key": "4KHD - cosplay",
-              "label": "4KHD - cosplay"
-            },
-            {
-              "key": "4KHD - album",
-              "label": "4KHD - album"
-            },
-            {
-              "key": "115ZY - 街拍偷拍",
-              "label": "115ZY - 街拍偷拍"
-            },
-            {
-              "key": "115ZY - 丝袜美腿",
-              "label": "115ZY - 丝袜美腿"
-            },
-            {
-              "key": "115ZY - 欧美风情",
-              "label": "115ZY - 欧美风情"
-            },
-            {
-              "key": "115ZY - 卡通漫画",
-              "label": "115ZY - 卡通漫画"
-            },
-            {
-              "key": "115ZY - 网友自拍",
-              "label": "115ZY - 网友自拍"
-            },
-            {
-              "key": "115ZY - 露出激情",
-              "label": "115ZY - 露出激情"
-            },
-            {
-              "key": "115ZY - 唯美写真",
-              "label": "115ZY - 唯美写真"
-            },
-            {
-              "key": "115ZY - 女优情报",
-              "label": "115ZY - 女优情报"
-            },
             {
               "key": "MMT - 唯美写真",
               "label": "MMT - 唯美写真"

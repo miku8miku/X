@@ -1,5 +1,8 @@
 const $ = new Env("美图写真测试");
 // $.useProxy = true;
+// const { HttpsProxyAgent } = require('https-proxy-agent');
+// const httpsAgent = new HttpsProxyAgent(`http://127.0.0.1:7890`);
+
 // 图源
 const GRAPHIC_SOURCE = {
   "4KHD": "HD4K",
@@ -7,7 +10,7 @@ const GRAPHIC_SOURCE = {
   MMT: 'MMT'
 };
 // 用户选择
-const [SOURCE, CATEGORY] = ($.getdata("meitu_type") ?? "115ZY - 丝袜美腿")
+const [SOURCE, CATEGORY] = ($.getdata("meitu_type") ?? "MMT - 丝袜美腿")
   .split("-")
   .map((it) => it.trim());
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
@@ -45,6 +48,7 @@ const main = async () => {
 
     if (!SOURCE) throw "未知错误~";
     const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
+    console.log(images.length);
     const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");
     const slicedImages = images.slice(0, 60);
     //图片数量太多会导致vpn崩溃
@@ -98,7 +102,7 @@ async function HD4K() {
   const getDetail = async (url, title) => {
     console.log(`[𝟒𝐊𝐇𝐃] 📚开始获取：${title}`);
     return $.http
-      .get(url)
+      .get(url,{httpsAgent})
       .then(({ body }) => {
         const _$ = $.cheerio.load(body);
         return _$('img[loading="lazy"][decoding="async"]')
@@ -315,8 +319,6 @@ async function fetchData(o) {
           method,
           headers,
           'binary-mode': resultType == 'buffer',
-          // Surge/Loon新增字段
-          'auto-cookie': autoCookie,
           // env.js默认重定向字段
           followRedirect,
           // Quantumult X特殊字段
