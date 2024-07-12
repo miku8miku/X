@@ -43,7 +43,7 @@ const main = async () => {
     $.logErr(e);
   }
 
-  $.done(console.log(3));
+  $.done(console.log(4));
 };
 
 if (typeof $request === "undefined") {
