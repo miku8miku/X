@@ -59,6 +59,7 @@ const main = async () => {
   } catch (e) {
     $.logErr(e,'美图获取失败');
   }
+  $.wait(3e4);
   $.done( $.msg('完成'))
 };
 
