@@ -44,15 +44,15 @@ const main = async () => {
     if (!SOURCE) throw "未知错误~";
     const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
     const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");
-    const slicedImages = images.slice(0, 2);
+    const slicedImages = images.slice(0, 1);
   const imageBase64Array = await Promise.all(slicedImages.map(async (imageUrl) => {
     const response = await fetchData({ url: imageUrl, resultType: 'buffer',headers:{'Referer': 'https://mm.tvv.tw'}})
     return response
 }));
-  console.log(imageBase64Array);
+  // console.log(imageBase64Array);
     const html = render(imageBase64Array, title);
     $.setdata(html, "meitu_html");
-    // $.fs.writeFileSync('output.html', html);
+    // $.fs.writeFileSync('output.html', html, 'utf8');
     // console.log('HTML 内容已成功保存到 output.html');
     $.msg('美图获取成功');
   } catch (e) {
@@ -78,7 +78,7 @@ const main = async () => {
 //   })();
 // }
 
-main().finally(() => $.done());
+main().finally(() => $.done({}));
 
 
 // main().catch(console.error);
