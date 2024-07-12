@@ -58,7 +58,6 @@ const main = async () => {
   } catch (e) {
     $.logErr(e);
   }
-
   $done(console.log(2));
 };
 
@@ -80,7 +79,7 @@ const main = async () => {
 //   })();
 // }
 
-main().finally(() => $.done({}));
+main()
 
 
 // main().catch(console.error);
