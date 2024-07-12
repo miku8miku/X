@@ -303,7 +303,7 @@ async function fetchData(o) {
           dataType = 'form', // 请求数据类型
           deviceType = 'mobile', // 设备类型
           resultType = 'data', // 返回数据类型
-          timeout = 1e4, // 超时时间
+          timeout = 3e4, // 超时时间
           useProxy = $.useProxy, // 是否使用代理
           autoCookie = false, // 是否自动携带cookie
           followRedirect = false, // 是否重定向
@@ -337,7 +337,7 @@ async function fetchData(o) {
       // 处理params参数
       method === 'get' && params && Object.assign(options, { params })
       // 超时处理兼容Surge => 单位是s
-      Object.assign(options, { timeout: $.isSurge() ? timeout / 1e3 : timeout })
+      Object.assign(options, { timeout: $.isShadowrocket() ? timeout / 1e3 : timeout })
       // post请求处理body
       const body = method === 'post' && b && ((o.dataType === 'json' ? $.toStr : $.queryStr)(typeof b === 'object' ? b : '') || b)
       method === 'post' && body && Object.assign(options, { body })
