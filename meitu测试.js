@@ -47,8 +47,7 @@ const main = async () => {
     const slicedImages = images.slice(0, 1);
   const imageBase64Array = await Promise.all(slicedImages.map(async (imageUrl) => {
     const response = await fetchData({ url: imageUrl, resultType: 'buffer',headers:{'Referer': 'https://mm.tvv.tw'}})
-    const rs = Xo(response)
-    return rs
+    return response
 }));
   // console.log(imageBase64Array);
     const html = render(imageBase64Array, title);
@@ -305,7 +304,7 @@ async function fetchData(o) {
           dataType = 'form', // 请求数据类型
           deviceType = 'mobile', // 设备类型
           resultType = 'data', // 返回数据类型
-          timeout = 3e4, // 超时时间
+          timeout = 1e4, // 超时时间
           useProxy = $.useProxy, // 是否使用代理
           autoCookie = false, // 是否自动携带cookie
           followRedirect = false, // 是否重定向
