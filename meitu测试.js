@@ -44,7 +44,7 @@ const main = async () => {
     if (!SOURCE) throw "未知错误~";
     const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
     const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");
-    const slicedImages = images.slice(0, 10);
+    const slicedImages = images.slice(0, 20);
   const imageBase64Array = await Promise.all(slicedImages.map(async (imageUrl) => {
     const response = await fetchData({ url: imageUrl, resultType: 'buffer',headers:{'Referer': 'https://mm.tvv.tw'}})
     return response
@@ -76,7 +76,7 @@ const main = async () => {
 //   })();
 // }
 
-main().finally(() => $.done({}));
+main().finally(() => $.done( $.msg('完成')));
 
 
 // main().catch(console.error);
