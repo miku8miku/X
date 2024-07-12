@@ -1,5 +1,5 @@
 const $ = new Env("美图写真测试");
-$.useProxy = true;
+// $.useProxy = true;
 // 图源
 const GRAPHIC_SOURCE = {
   "4KHD": "HD4K",
