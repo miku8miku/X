@@ -50,18 +50,18 @@ const main = async () => {
     const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
     console.log(images.length);
     const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");
-    const slicedImages = images.slice(0, 60);
+    const slicedImages = images.slice(0, 20);
     //图片数量太多会导致vpn崩溃
-    $.msg('更新');
+    // $.msg('更新');
   const imageBase64Array = await Promise.all(slicedImages.map(async (imageUrl) => {
     const response = await fetchData({ url: imageUrl, resultType: 'buffer',headers:{'Referer': 'https://mm.tvv.tw'}})
     return response
 }));
   // console.log(imageBase64Array);
     const html = render(imageBase64Array, title);
-    $.msg('编码完成');
+    // $.msg('编码完成');
     $.setdata(html, "meitu_html");
-    $.msg('获取成功');
+    $.msg('美图获取成功');
   } catch (e) {
     $.logErr(e,'美图获取失败');
   }
