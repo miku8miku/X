@@ -305,7 +305,7 @@ async function fetchData(o) {
           dataType = 'form', // 请求数据类型
           deviceType = 'mobile', // 设备类型
           resultType = 'data', // 返回数据类型
-          timeout = 3e4, // 超时时间
+          timeout = 1e4, // 超时时间
           useProxy = $.useProxy, // 是否使用代理
           autoCookie = false, // 是否自动携带cookie
           followRedirect = false, // 是否重定向
