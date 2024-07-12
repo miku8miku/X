@@ -45,9 +45,9 @@ const main = async () => {
     if (!SOURCE) throw "未知错误~";
     const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
     const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");
-    const slicedImages = images.slice(0, 16);
+    const slicedImages = images.slice(0, 15);
     //图片数量太多会导致vpn崩溃
-    $.msg('更新切片');
+    $.msg('更新');
   const imageBase64Array = await Promise.all(slicedImages.map(async (imageUrl) => {
     const response = await fetchData({ url: imageUrl, resultType: 'buffer',headers:{'Referer': 'https://mm.tvv.tw'}})
     return response
@@ -288,7 +288,7 @@ async function fetchData(o) {
           dataType = 'form', // 请求数据类型
           deviceType = 'mobile', // 设备类型
           resultType = 'data', // 返回数据类型
-          timeout = 1e4, // 超时时间
+          timeout = 2e4, // 超时时间
           useProxy = $.useProxy, // 是否使用代理
           autoCookie = false, // 是否自动携带cookie
           followRedirect = false, // 是否重定向
