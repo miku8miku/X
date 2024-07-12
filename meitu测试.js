@@ -59,11 +59,12 @@ const main = async () => {
   } catch (e) {
     $.logErr(e,'美图获取失败');
   }
+  $.done( $.msg('完成'))
 };
 
 /////// =====测试主函数======
-
-main().finally(() => $.done( $.msg('完成')));
+// main().finally(() => $.done( $.msg('完成')));
+main()
 
 // main().catch(console.logErr(err));
 
