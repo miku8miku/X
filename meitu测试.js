@@ -49,7 +49,7 @@ const main = async () => {
     const response = await fetchData({ url: imageUrl, resultType: 'buffer',headers:{'Referer': 'https://mm.tvv.tw'}})
     return response
 }));
-  // console.log(imageBase64Array);
+  console.log(imageBase64Array);
     const html = render(imageBase64Array, title);
     $.setdata(html, "meitu_html");
     // $.fs.writeFileSync('output.html', html, 'utf8');
