@@ -174,6 +174,8 @@ function loadRemoteScriptByCache(scriptUrl, functionName, scriptName) {
 async function showMsg(n, o, i, t) {
     if ($.isShadowrocket()) {
         const content = [i]
+        console.log(`🔗打开链接: ${t['open-url']}`)
+        console.log(`🎬媒体链接: ${t['media-url']}`)
         t?.['open-url'] && content.push(`🔗打开链接: ${t['open-url']}`)
         t?.['media-url'] && content.push(`🎬媒体链接: ${t['media-url']}`)
     }
