@@ -376,7 +376,10 @@ async function fetchData(o) {
           })
       })
       // 使用Promise.race来给Quantumult X强行加入超时处理
-      return $.isQuanX() ? await Promise.race([new Promise((_, r) => setTimeout(() => r(new Error('网络开小差了~')), timeout)), promise]) : promise
+      return await Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error('网络开小差了~')), timeout))
+      ])
   } catch (e) {
       throw new Error(e)
   }
