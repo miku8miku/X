@@ -56,6 +56,7 @@ const main = async () => {
   } catch (e) {
     $.logErr(e);
   }
+  $done();
 };
 
 /////// =====测试主函数======
