@@ -46,15 +46,16 @@ const main = async () => {
     if (!SOURCE) throw "未知错误~";
     const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
     const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");
-    const slicedImages = images.slice(0, 30);
+    const slicedImages = images.slice(0, 60);
     //图片数量太多会导致vpn崩溃
-    $.msg('更新111');
+    $.msg('更新');
   const imageBase64Array = await Promise.all(slicedImages.map(async (imageUrl) => {
     const response = await fetchData({ url: imageUrl, resultType: 'buffer',headers:{'Referer': 'https://mm.tvv.tw'}})
     return response
 }));
   // console.log(imageBase64Array);
     const html = render(imageBase64Array, title);
+    $.msg('编码完成');
     $.setdata(html, "meitu_html");
     $.msg('美图获取成功');
   } catch (e) {
@@ -1081,6 +1082,24 @@ function Env(t,e){
     }
     wait(t) {
       return new Promise((e) => setTimeout(e, t));
+    }
+    done(t = {}) {
+      const e = (new Date().getTime() - this.startTime) / 1e3;
+      switch (
+        (this.log("", `🔔${this.name}, 结束! 🕛 ${e} 秒`),
+        this.log(),
+        this.getEnv())
+      ) {
+        case "Surge":
+        case "Loon":
+        case "Stash":
+        case "Shadowrocket":
+        case "Quantumult X":
+        default:
+          break;
+        case "Node.js":
+          process.exit(1);
+      }
     }
   })(t, e);
 }
