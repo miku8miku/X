@@ -11,7 +11,7 @@ const GRAPHIC_SOURCE = {
   MMT: 'MMT'
 };
 // 用户选择
-const [SOURCE, CATEGORY] = ($.getdata("meitu_type") ?? "4KHD - 丝袜美腿")
+const [SOURCE, CATEGORY] = ($.getdata("meitu_type") ?? "MMT - 丝袜美腿")
   .split("-")
   .map((it) => it.trim());
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
@@ -120,6 +120,8 @@ const main = async () => {
     //   $open: "https://mei.tu",
     //   $media: thumb,
     // });
+    $.fs.writeFileSync('output.html', html, 'utf8');
+    console.log('HTML 内容已成功保存到 output.html');
     $.msg('美图获取成功');
   } catch (e) {
     $.logErr(e);
