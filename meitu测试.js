@@ -71,12 +71,7 @@ const main = async () => {
 // main().finally(() => $.done( $.msg('完成')));
 (async () => {
   const body = $.getdata("meitu_html");
-  !body && (await main());
-  const response = {
-    headers: { "content-type": "text/html" },
-    status: $.isQuanX() ? "HTTP/1.1 200 OK" : 200,
-    body,
-  };
+  body && (await main());
   $.done($.msg('完成'));
 })();
 
