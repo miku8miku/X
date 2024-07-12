@@ -337,7 +337,7 @@ async function fetchData(o) {
       // 处理params参数
       method === 'get' && params && Object.assign(options, { params })
       // 超时处理兼容Surge => 单位是s
-      Object.assign(options, { timeout: $.isShadowrocket() ? timeout / 1e3 : timeout })
+      Object.assign(options, { timeout: $.isSurge() ? timeout / 1e3 : timeout })
       // post请求处理body
       const body = method === 'post' && b && ((o.dataType === 'json' ? $.toStr : $.queryStr)(typeof b === 'object' ? b : '') || b)
       method === 'post' && body && Object.assign(options, { body })
