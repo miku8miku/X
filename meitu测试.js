@@ -36,6 +36,7 @@ function render(imageDataArray, title) {
 
 const main = async () => {
   try {
+    $.wait(3e4);
     $.msg('开始执行');
     // await showNotice();
     await loadRemoteScriptByCache('https://cdn.jsdelivr.net/gh/Yuheng0101/X@main/Utils/Buffer.min.js', 'loadBuffer', 'Buffer')
