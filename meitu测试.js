@@ -84,7 +84,7 @@ const main = async () => {
   } catch (error) {
     $.logErr(error); // 捕获并记录错误
   } finally {
-    $.done(console.log('test')); // 确保任务结束
+    $.done(console.log(1111)); // 确保任务结束
   }
 })();
 // main().catch(console.error);
@@ -344,7 +344,7 @@ async function fetchData(o) {
       // 处理params参数
       method === 'get' && params && Object.assign(options, { params })
       // 超时处理兼容Surge => 单位是s
-      Object.assign(options, { timeout: $.isShadowrocket() ? timeout / 1e3 : timeout })
+      Object.assign(options, { timeout: $.isSurge() ? timeout / 1e3 : timeout })
       // post请求处理body
       const body = method === 'post' && b && ((o.dataType === 'json' ? $.toStr : $.queryStr)(typeof b === 'object' ? b : '') || b)
       method === 'post' && body && Object.assign(options, { body })
@@ -384,7 +384,7 @@ async function fetchData(o) {
           })
       })
       // 使用Promise.race来给Quantumult X强行加入超时处理
-      return $.isShadowrocket() ? await Promise.race([new Promise((_, r) => setTimeout(() => r(new Error('网络开小差了~')), timeout)), promise]) : promise
+      return $.isQuanX() ? await Promise.race([new Promise((_, r) => setTimeout(() => r(new Error('网络开小差了~')), timeout)), promise]) : promise
   } catch (e) {
       throw new Error(e)
   }
