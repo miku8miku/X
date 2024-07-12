@@ -9,7 +9,7 @@
       "id": "kb.meitu",
       "name": "美图鉴赏",
       "descs_html": [
-        "<p style='color:#3498db;text-align:center;'>嘿嘿嘿7.12😊</p>"
+        "<p style='color:#3498db;text-align:center;'>7.12😊</p>"
       ],
       "keys": ["meitu_type"],
       "settings": [
