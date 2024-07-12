@@ -3,7 +3,6 @@
 // const httpsAgent = new HttpsProxyAgent(`http://127.0.0.1:7890`);
 
 
-
 const $ = new Env("美图写真测试");
 // 图源
 const GRAPHIC_SOURCE = {
@@ -12,7 +11,7 @@ const GRAPHIC_SOURCE = {
   MMT: 'MMT'
 };
 // 用户选择
-const [SOURCE, CATEGORY] = ($.getdata("meitu_type") ?? "MMT - 丝袜美腿")
+const [SOURCE, CATEGORY] = ($.getdata("meitu_type") ?? "4KHD - 丝袜美腿")
   .split("-")
   .map((it) => it.trim());
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);

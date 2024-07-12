@@ -9,7 +9,7 @@
       "id": "kb.meitu",
       "name": "美图鉴赏",
       "descs_html": [
-        "<p style='color:#3498db;text-align:center;'>嘿嘿嘿😊</p>"
+        "<p style='color:#3498db;text-align:center;'>嘿嘿嘿7.12😊</p>"
       ],
       "keys": ["meitu_type"],
       "settings": [
@@ -77,7 +77,7 @@
         "https://raw.githubusercontent.com/miku8miku/X/main/Assets/bus.png",
         "https://raw.githubusercontent.com/miku8miku/X/main/Assets/bus.png"
       ],
-      "script": "https://raw.githubusercontent.com/miku8miku/X/main/meitu.js"
+      "script": "https://raw.githubusercontent.com/miku8miku/X/main/meitu测试.js"
   
     },
     {
