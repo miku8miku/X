@@ -76,7 +76,7 @@ const main = async () => {
 //   })();
 // }
 
-main().finally(() => $.done(console.log(1111)));
+main();
 
 
 // main().catch(console.error);
