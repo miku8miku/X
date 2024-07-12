@@ -42,8 +42,6 @@ const main = async () => {
   } catch (e) {
     $.logErr(e);
   }
-
-  $.done(console.log(4));
 };
 
 // if (typeof $request === "undefined") {
