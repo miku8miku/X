@@ -56,7 +56,7 @@ const main = async () => {
     $.setdata(html, "meitu_html");
     $.msg('美图获取成功');
   } catch (e) {
-    $.logErr(e);
+    $.logErr(e,'美图获取失败');
   }
 };
 
