@@ -65,7 +65,7 @@ const main = async () => {
 
 main().finally(() => $.done( $.msg('完成')));
 
-// main().catch($.logErr(e));
+// main().catch(console.logErr(err));
 
 
 // 4khd
@@ -90,7 +90,7 @@ async function HD4K() {
           .get()
           .filter((it) => it.url.endsWith(".html"));
       })
-      .catch((err) => $.logErr(err));
+      .catch((err) => console.logErr(err));
   };
   const getDetail = async (url, title) => {
     console.log(`[𝟒𝐊𝐇𝐃] 📚开始获取：${title}`);
@@ -103,7 +103,7 @@ async function HD4K() {
           .get()
           .filter((it) => it.match(/webp\?w=\d+$/));
       })
-      .catch((err) => $.logErr(err));
+      .catch((err) => console.logErr(err));
   };
   try {
     const list = await getList();
