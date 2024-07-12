@@ -36,6 +36,7 @@ function render(imageDataArray, title) {
 
 const main = async () => {
   try {
+    $.msg('开始执行');
     // await showNotice();
     await loadRemoteScriptByCache('https://cdn.jsdelivr.net/gh/Yuheng0101/X@main/Utils/Buffer.min.js', 'loadBuffer', 'Buffer')
     await loadRemoteScriptByCache('https://cdn.jsdelivr.net/gh/Yuheng0101/X@main/Utils/cheerio.js', 'createCheerio', 'cheerio')
@@ -44,7 +45,7 @@ const main = async () => {
     if (!SOURCE) throw "未知错误~";
     const { images, title } = await eval(GRAPHIC_SOURCE[SOURCE])();
     const thumb = images[random(0, images.length - 1)].replace(".webp", ".jpg");
-    const slicedImages = images.slice(0, 20);
+    const slicedImages = images.slice(0, 15);
   const imageBase64Array = await Promise.all(slicedImages.map(async (imageUrl) => {
     const response = await fetchData({ url: imageUrl, resultType: 'buffer',headers:{'Referer': 'https://mm.tvv.tw'}})
     return response
