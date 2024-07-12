@@ -84,7 +84,7 @@ const main = async () => {
   } catch (error) {
     $.logErr(error); // 捕获并记录错误
   } finally {
-    $.done({}); // 确保任务结束
+    $.done(console.log('test')); // 确保任务结束
   }
 })();
 // main().catch(console.error);
