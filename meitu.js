@@ -44,21 +44,21 @@ const main = async () => {
   }
 };
 
-// if (typeof $request === "undefined") {
-//   main().finally(() => $.done({}));
-// } else {
-//   (async () => {
-//     const body = $.getdata("meitu_html");
-//     !body && (await main());
-//     const response = {
-//       headers: { "content-type": "text/html" },
-//       status: $.isQuanX() ? "HTTP/1.1 200 OK" : 200,
-//       body,
-//     };
-//     $.done($.isQuanX() ? response : { response });
-//   })();
-// }
-main().finally(() => $.done({}));
+if (typeof $request === "undefined") {
+  main().finally(() => $.done({}));
+} else {
+  (async () => {
+    const body = $.getdata("meitu_html");
+    !body && (await main());
+    const response = {
+      headers: { "content-type": "text/html" },
+      status: $.isQuanX() ? "HTTP/1.1 200 OK" : 200,
+      body,
+    };
+    $.done($.isQuanX() ? response : { response });
+  })();
+}
+
 // 4khd
 async function HD4K() {
   const host = `https://www.4khd.com`;

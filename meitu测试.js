@@ -65,12 +65,20 @@ const main = async () => {
   } catch (e) {
     $.logErr(e,'美图获取失败');
   }
-  $.done( $.msg('完成'))
 };
 
 /////// =====测试主函数======
 // main().finally(() => $.done( $.msg('完成')));
-main()
+(async () => {
+  const body = $.getdata("meitu_html");
+  !body && (await main());
+  const response = {
+    headers: { "content-type": "text/html" },
+    status: $.isQuanX() ? "HTTP/1.1 200 OK" : 200,
+    body,
+  };
+  $.done($.msg('完成'));
+})();
 
 // main().catch(console.logErr(err));
 
