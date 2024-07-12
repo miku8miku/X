@@ -77,7 +77,7 @@ const main = async () => {
 // }
 
 
-// main().finally(() => $.done({}));
+
 (async () => {
   try {
     await main(); // 等待 main 执行完成
