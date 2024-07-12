@@ -47,9 +47,10 @@ const main = async () => {
     const slicedImages = images.slice(0, 1);
   const imageBase64Array = await Promise.all(slicedImages.map(async (imageUrl) => {
     const response = await fetchData({ url: imageUrl, resultType: 'buffer',headers:{'Referer': 'https://mm.tvv.tw'}})
-    return response
+    const rs = Xo(response)
+    return rs
 }));
-  console.log(imageBase64Array);
+  // console.log(imageBase64Array);
     const html = render(imageBase64Array, title);
     $.setdata(html, "meitu_html");
     // $.fs.writeFileSync('output.html', html, 'utf8');
