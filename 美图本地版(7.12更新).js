@@ -6,19 +6,19 @@ const path = require('path');
 const got = require('got');
 const cheerio = require('cheerio');
 const { HttpsProxyAgent } = require('https-proxy-agent');
-const httpsAgent = new HttpsProxyAgent(`http://127.0.0.1:7890`);
+const httpsAgent = new HttpsProxyAgent(`http://127.0.0.1:7890`); //😀
 const $ = new Env("美图写真");
 const GRAPHIC_SOURCE = {
   "4KHD": "HD4K",
-  "115ZY": "ZY115",//  街拍偷拍  丝袜美腿  欧美风情 卡通漫画  网友自拍   露出激情  唯美写真  女优情报  
+  "115ZY": "ZY115",//  街拍偷拍  丝袜美腿  欧美风情 卡通漫画  网友自拍   露出激情  唯美写真  女优情报  😀
    MMT: 'MMT'};
 // 用户选择
-const [SOURCE, CATEGORY] = ($.getdata("meitu_type") ?? " 4KHD - 丝袜美腿 ").split("-").map((it) => it.trim());//使用 trim() 方法去除每个数组元素的首尾空格。
-
+const [SOURCE, CATEGORY] = ($.getdata("meitu_type") ?? " MMT - 丝袜美腿 ") //选择源头😀
+.split("-").map((it) => it.trim());//使用 trim() 方法去除每个数组元素的首尾空格。
 //上传云端
-const { uppic } = require('./测试图片上传/uppic.js');
+const { uppic } = require('./测试图片上传/uppic.js'); //库的路径😀
 const folderPath = './meitu';
-const alistFolderPath = 'onedrive/7.13';//////修改日期
+const alistFolderPath = 'onedrive/7.13';//////修改日期😀
 const webdavConfig = {
   url: 'http://192.168.50.158:5244/dav/',
   username: 'admin',
