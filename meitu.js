@@ -85,17 +85,26 @@ async function HD4K() {
   };
   const getDetail = async (url, title) => {
     console.log(`[𝟒𝐊𝐇𝐃] 📚开始获取：${title}`);
-    return $.http
-      .get(url)
-      .then(({ body }) => {
+    try {
+        const { body } = await $.http.get(url);
         const _$ = $.cheerio.load(body);
-        return _$('img[loading="lazy"][decoding="async"]')
-          .map((_, el) => _$(el).attr("src"))
-          .get()
-          .filter((it) => it.match(/webp\?w=\d+$/));
-      })
-      .catch((err) => console.logErr(err));
-  };
+        const images = _$('img[loading="lazy"][decoding="async"]')
+           .map((_, el) => _$(el).attr("src"))
+           .get()
+           .filter((it) => it.match(/webp\?w=\d+$/));
+
+        // 将图片地址的前缀进行替换
+        const modifiedImages = images.map(image => {
+            return image.replace('https://i0.wp.com/pic.4khd.com/', 'https://img.4khd.com/');
+        });
+
+        console.log(`[𝟒𝐊𝐇𝐃] 🖼️ 获取到 ${modifiedImages.length} 张图片`);
+        return modifiedImages;
+    } catch (err) {
+        console.logErr(err);
+        return [];
+    }
+};
   try {
     const list = await getList();
     if (list?.length) {
