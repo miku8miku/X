@@ -130,7 +130,7 @@ async function HD4K() {
         console.log(`[𝟒𝐊𝐇𝐃] 🖼️ 获取到 ${modifiedImages.length} 张图片`);
         return modifiedImages;
     } catch (err) {
-        console.logErr(err);
+        $.logErr(err);
         return [];
     }
 };
