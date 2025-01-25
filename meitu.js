@@ -81,7 +81,7 @@ async function HD4K() {
           .get()
           .filter((it) => it.url.endsWith(".html"));
       })
-      .catch((err) => console.logErr(err));
+      .catch((err) => console.error(err));
   };
   const getDetail = async (url, title) => {
     console.log(`[𝟒𝐊𝐇𝐃] 📚开始获取：${title}`);
