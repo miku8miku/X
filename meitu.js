@@ -88,10 +88,39 @@ async function HD4K() {
     try {
         const { body } = await $.http.get(url);
         const _$ = $.cheerio.load(body);
-        const images = _$('img[loading="lazy"][decoding="async"]')
+        let images = _$('img[loading="lazy"][decoding="async"]')
            .map((_, el) => _$(el).attr("src"))
            .get()
            .filter((it) => it.match(/webp\?w=\d+$/));
+
+          // 查找所有链接
+        const allLinks = $('a').map((_, el) => $(el).attr('href')).get();
+        const regex = /\.html\/(\d+)/;
+        const matchedLinks = [];
+        allLinks.forEach(link => {
+            const match = link && link.match(regex);
+            if (match) {
+                matchedLinks.push(link);
+            }
+        });
+        console.log(`[𝟒𝐊𝐇𝐃] 匹配到的链接: ${matchedLinks}`);
+    
+        // 遍历 matchedLinks 并获取其中的图片链接
+        for (const link of matchedLinks) {
+          try {
+              const linkResponse = await axios.get(link, { httpsAgent });
+              const link$ = cheerio.load(linkResponse.data);
+              const linkImages = link$('img[loading="lazy"][decoding="async"]')
+                  .map((_, el) => link$(el).attr("src"))
+                  .get()
+                  .filter(it => it.match(/webp\?w=\d+$/));
+    
+              // 将获取到的图片链接合并到 images 数组中
+              images = images.concat(linkImages);
+          } catch (err) {
+              console.error(`[𝟒𝐊𝐇𝐃] 获取链接 ${link} 的图片时出错:`, err);
+          }
+      }
 
         // 将图片地址的前缀进行替换
         const modifiedImages = images.map(image => {
